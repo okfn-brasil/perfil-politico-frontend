@@ -1,0 +1,575 @@
+.filters{
+  font-size: 0px;
+}
+
+label{
+  width: calc( ( 100% - #{$inter-column} )/2 );
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0 0 10px 0;
+  overflow: visible;
+  letter-spacing: 0.05em;
+  font-size: 1.5rem;
+  line-height: 30px;
+  font-family: $font-default !important;
+  font-weight: 500;
+  color: $primary-color;
+
+  &:first-of-type{
+    margin: 0 $inter-column 10px 0;
+  }
+
+  @media (max-width: 800px){
+    width: calc( ( 100% - #{$inter-column-medium} )/2 );
+    &:first-of-type{
+      margin: 0 $inter-column-medium 10px 0;
+    }
+  }
+
+  @media (max-width: 480px){
+    width: calc( ( 100% - #{$inter-column-small} )/2 );
+    &:first-of-type{
+      margin: 0 $inter-column-small 10px 0;
+    }
+  }
+
+  @media (max-width: 380px){
+    width: 100%;
+    &:first-of-type{
+      margin: 0 0 10px 0;
+    }
+  }
+}
+
+.button{
+  position: relative;
+  display: inline-block;
+  z-index:100;
+  cursor: pointer;
+  border: none; /*1px solid $bg-light;*/
+  border-radius: 4px;
+  padding: 8px 8px;
+  text-transform: uppercase;
+  font-size: 1.35rem;
+  line-height: 1em;
+  /*color: $alt-color;*/
+  background: #dae4e5;/*$white;*/
+
+  &:focus{
+    outline: none;
+    /*border: 1px dotted rgba(0,0,0,0.2);*/
+    border: none;
+    box-shadow: none;
+  }
+
+  &:hover{
+    opacity: 0.75;
+    color: $alt-color;
+  }
+
+  &#plus-button{
+    height: 26px; width: 30px;
+    right: 0px; top: 0;
+    line-height: 0.1;
+    padding: 0px;
+    white-space: nowrap;
+    text-align: right;
+    background: transparent;
+    overflow: visible;
+    position: absolute;
+    margin-left: 5px;
+
+    span{
+      font-size: 1.1rem;
+      line-height: 20px;
+      float: right;
+      margin-right: 40px;
+
+      @media (max-width: 420px){
+        display:none;
+      }
+    }
+
+    &:after{
+      content: "+";
+      font-size: 2.1rem;
+      line-height: 19px;
+      height: 22px;
+      width: 22px;
+      border-radius: 4px;
+      text-align: center;
+      vertical-align: middle;
+      display: inline-block;
+      background: #dae4e5;
+      padding: 2px 2px 2px 3px;
+      color: $white;
+      background: $alt-color;
+    }
+
+    &.active:after{
+      content: "x";
+      text-transform: lowercase;
+    }
+  }
+
+  &#add-button{
+    width: 90px;
+    height: 36px;
+    top: 0;
+    position: relative;
+    background: $alt-color;
+    color: $white;
+    float: right;
+  }
+
+  &#mun-ok-button{
+    width: 100px;
+    height: 38px;
+    position: relative;
+    background: $alt-color;
+    color: $white;
+    margin-top: 0;
+  }
+
+  &#mun-cancel-button{
+    width: 100px;
+    height: 38px;
+    position: relative;
+    margin: 0 1rem 0 0;
+    margin-top: 0;
+  }
+}
+
+.select-box, .search-box{
+  position: relative;
+  height: 38px;
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0;
+  border: 1px solid $bg-light;
+  background: $white url("../images/arrow-down.svg") no-repeat center right;
+  background-size: 30px auto;
+  font-size: 1.5rem;
+  line-height: 30px;
+  box-sizing: border-box;
+  cursor: pointer;
+  overflow: hidden;
+
+  select, input{
+    color: $input-color;
+    cursor: pointer;
+    position: relative;
+    opacity: 0.99;
+    font-size: 1.5rem;
+    line-height: 30px;
+    z-index: 1;
+    margin: 0;
+    width: calc(100% + 50px);
+    height: 38px;
+    padding: 2px 50px 5px 15px;
+    border: none;
+    box-shadow: none;
+    background-color: transparent;
+    background-image: none;
+    -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+    font-family: $font-default !important;
+    font-weight: 300;
+    border-radius: 0;
+    box-sizing: border-box;
+
+    &::-webkit-calendar-picker-indicator {
+      display: none;
+    }
+
+    &:focus{
+      border: none;
+      box-shadow: none;
+      outline: none !important;
+      border-radius: 0;
+      color: $secondary-color;
+    }
+
+    datalist{
+      max-height: 200px;
+    }
+  }
+
+  &.inverted{
+    border: 1px solid rgba(255,255,255,0.5);
+    background: transparent url("../images/arrow-down-inverted.svg") no-repeat center right;
+    color: $white;
+
+    select, input{
+      color: $white;
+
+      &::placeholder{
+        color: rgba(255,255,255,0.5);
+      }
+    }
+  }
+
+  &#search-box{
+    width: 100%;
+    max-width: 320px;
+    float: right;
+
+    @media (max-width: 680px){
+      margin-bottom: 15px;
+      max-width: 680px;
+    }
+  }
+
+  &#questions{
+    border: none;
+    background: transparent url("../images/arrow-down-inverted.svg") no-repeat center right;
+    background-size: 36px auto;
+    color: $white;
+
+    select, input{
+      color: $white;
+      font-size: 2.8rem;
+    }
+  }
+}
+
+.search-box{
+  background: $bg-light;
+}
+
+.table-holder{
+  overflow: hidden;
+}
+
+.chart-info{
+
+  &.hidden{
+    display: none;
+  }
+}
+
+.no-info{
+  &.hidden{
+    display: none;
+  }
+}
+
+/****************/
+/* test - custom select */
+/* the container must be positioned relative:*/
+.custom-select {
+  position: relative;
+  float: left;
+  font: 2.5rem $font-default;
+  padding-right: 50px;
+
+  &#questions{
+    width: auto;
+  }
+
+  @media (max-width: 980px){
+    font: 1.8rem $font-default;
+    padding-bottom: 15px;
+  }
+}
+
+.custom-select select {
+  background: $secondary-color;
+  display: none; /* hide original SELECT element: */
+}
+
+/*style the arrow inside the select element:*/
+.select-selected:after {
+  position: absolute;
+  content: "";
+  width: 35px;
+  height: 35px;
+  top: 0;
+  right: 0;
+  padding: 5px 0;
+  margin:0;
+  background: transparent url("../images/arrow-up-inverted.svg") no-repeat center right;
+  z-index:1000;
+  /*border-color: transparent transparent #fff transparent;*/
+}
+
+/*point the arrow upwards when the select box is open (active):*/
+.select-selected.select-arrow-active:after {
+  /*border-color: #fff transparent transparent transparent;*/
+  background: transparent url("../images/arrow-down-inverted.svg") no-repeat center right;
+}
+
+/*style the items (options), including the selected item:*/
+.select-items div,.select-selected {
+  color: $white;
+  padding: 8px 0;
+  border: 1px solid transparent;
+  border-color: transparent transparent rgba(0, 0, 0, 0.1) transparent;
+  cursor: pointer;
+}
+
+.select-selected {
+  background: $secondary-color;
+  border: none;
+}
+/*style items (options):*/
+.select-items {
+  position: absolute;
+  background-color: $secondary-color;
+  color: $bg-light;
+  font-size: 1.5rem;
+  bottom: 60px;
+  padding: 8px 16px;
+  left: 0;
+  right: 0;
+  z-index: 99;
+}
+
+/*hide the items when the select box is closed:*/
+.select-hide {
+  display: none;
+}
+
+.select-items div:hover, .same-as-selected {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.select-items div.disabled {
+  background-color: rgba(0, 0, 0, 0.1);
+  color: $bg-light;
+  opacity: 0.4;
+}
+
+
+/* slider 
+.slider-container{
+  margin: 0 auto 1rem auto;
+  padding-top: 0px;
+  min-height: 40px;
+  clear: both;
+
+  .slider {
+    display: block;
+    position: relative;
+    height: 45px;
+    overflow: visible;
+    width: calc(100% - 10px);
+    margin: 0 5px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    overflow: visible;
+
+    @media (max-width: 720px){
+      width: calc(100% - 20px);
+      margin: 2rem 5px 0 5px;
+    }
+  }
+
+  .city-box{
+    display: none;
+  }
+
+  &.on-city{
+
+    .slider{
+      width: calc( 100% - ( #{$inter-column} + 25%) );
+      float: left;
+
+      @media (max-width: 800px){
+        width: calc( 100% - 20px );
+        float: auto;
+        clear: both;
+        margin: 2rem 5px 0 5px;
+        width: calc(100% - 10px);
+      }
+    }
+
+    .city-box{
+      display: block;
+    }
+  }
+}
+
+.slider .slider-touch-left,
+.slider .slider-touch-right {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  height: 36px;
+  width: 36px;
+  left: 0;
+  margin-left: -18px;
+  padding: 6px;
+  z-index: 2;
+  cursor: pointer;
+  overflow: visible;
+}
+.slider .slider-touch-right{
+  left: 50%;
+}
+.slider .slider-touch-left span.marker,
+.slider .slider-touch-right span.marker {
+  display: block;
+  position: absolute;
+  width: 35%;
+  height: 35%;
+  background: $alt-color;
+  border: 1px solid $white;
+  border-radius: 3px;
+  top: calc(50% + 10px);
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.slider .slider-touch-left span.text,
+.slider .slider-touch-right span.text {
+  display: block;
+  position: absolute;
+  width: 50px;
+  height: 15px;
+  top:0;
+  left: 10px;
+  letter-spacing: 0.03em;
+  font-size: 1.1rem;
+  font-weight: bold;
+  text-align: left;
+  color: $alt-color;
+  background: $white;
+  padding: 2px;
+  z-index:-1;
+
+  &.end{
+    right: 10px;
+    left: auto;
+    text-align: right;
+  }
+}
+.slider .slider-line {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  position: absolute;
+  z-index: 1;
+  width: 100%;
+  left: 0px;
+  top: 27px;
+  height: 2px;
+  border-radius: 2px;
+  background: #E0E0E0;
+  z-index: 0;
+  overflow: hidden;
+
+  span {
+    display: block;
+    height: 2px;
+    width: 50%;
+    margin-top: 0px;
+    background: $alt-color;
+  }
+}
+
+.slider .slider-ruler{
+  width: 100%;
+  height: 10px;
+  z-index: 0;
+  top:18px;
+  position: absolute;
+  font-size: 0;
+
+  span{
+    display: inline-block;
+    position: relative;
+    height: 10px;
+    border-right: 1px solid #E0E0E0;
+    margin: 0;
+    width: 100%;
+    overflow: visible;
+
+    b{
+      text-align: center;
+      display: block;
+      position: absolute;
+      font-size: 1.1rem;
+      color: #E0E0E0;
+      width: 150%;
+      height: 15px;
+      top: -15px;
+      padding-left: 50%;
+    }
+  }
+} 
+
+.overlay{
+  position: relative;
+  display: block;
+  z-index: 100000;
+
+  &.hidden{
+    display: none;
+  }
+
+  &:before{
+    content: " ";
+    display: block;
+    width: 100%;
+    height: 100%;
+    top: 0; left: 0;
+    position: fixed;
+    background: rgba(255,255,255,0.85);
+    z-index: 0;
+  }
+
+  .lightbox{
+    position: absolute;
+    top: 0;
+    left: 50%;
+    z-index: 10;
+    background: $white;//$bg-light;
+    padding: 20px;
+    margin: 20px auto 0 auto;
+    border-radius: 5px;
+    border: 1px solid $alt-color;
+    width: 100%;
+    min-height: 100px;
+    box-shadow: 0px 1px 8px rgba(0,0,0,0.15);
+    transform: translate(-50%, 0px);
+    text-align: right;
+
+    .explainer{
+      font-size: 1.35rem;
+      letter-spacing: 0.04rem;
+    }
+
+    label{
+      text-align: left;
+
+      &.buttons{
+        text-align: right;
+      }
+
+      @media (max-width: 520px){
+        width: 100%;
+
+        &.buttons{
+          text-align: right;
+          margin-top: 1rem;
+        }
+
+        button{
+          max-width: 80px;
+          font-size: 1.1rem;
+        }
+      }
+    }
+
+    p{
+      margin: 0.5rem 0 2rem 0;
+      text-align: left;
+    }
+  }
+}*/

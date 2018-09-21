@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+	<head>
+		<title>Perfil político</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <meta name="keywords" content="eleições;candidatos;política" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <meta name="copyright" content="&copy; 2018" />
+
+        <meta http-equiv="Pragma" content="no-cache" />
+        <meta http-equiv="Cache-Control" content="no-cache,no-store" />
+        <meta http-equiv="Expires" content="Thu, 01 Jan 1970 00:00:00 GMT" />
+
+		<link href="css/style.css?v=1.0.0" rel="stylesheet" type="text/css" />
+	</head>
+
+    <body>
+
+        <div class="box-content first" id="box1">
+            <div class="column">
+
+                <div id="top-bar">
+                    <a href="#" class="top-icon">
+                        <img src="images/profiles.svg">
+                    </a>
+                    <div class="top-text"><span>perfil</span> político</div>
+                    <a href="#" class="top-menu">
+                        <img src="images/profiles2.svg">
+                    </a>
+                </div>
+                <div class="centered" id="intro">
+                    <span>Cargo: 
+                    <div class="select-box">
+                    <select id="filtro-cargo" data-name="cargo">
+                        <!-- populated -->
+                    </select>
+                    </div>
+                    </span>
+
+                    <span class="last">Estado: 
+                    <div class="select-box">
+                        <select id="filtro-estado" data-name="estado">
+                            <!-- populated -->
+                        </select>
+                    </div>
+                    </span>
+                </div>
+                <div class="column description"></div>
+            </div>
+        </div>
+        <div class="d-height first"></div>
+        
+        <div id="bottom-bar">
+            <div id="tags">
+                <div class="column description">
+                    Escolha uma opção para filtrar:
+                </div>
+            </div>
+            <div class="column">
+                <div class="custom-select" id="questions">
+                    <select id="filtro-perguntas" data-name="estado">
+                        <option value="">
+                        Selecione uma pergunta...</option>
+                        <option value="nunca eleitos" data-test="1">
+                        Quantos nunca foram eleitos?</option>
+                        <option value="nunca concorreram">
+                        Quantos nunca concorreram?</option>
+                        <option value="mulheres">
+                        Quantas são mulheres?</option>
+                        <option value="negros ou pardos">
+                        Quantos são negros ou pardos?</option>
+                    </select>
+                </div>
+                <div class="select-box inverted" id="search-box">
+                    <input list="candidate-list" id="name-search" placeholder="Busque por nome" size="35">
+                    <datalist id="candidate-list">
+                    </datalist>
+                </div>
+            </div>
+        </div>
+
+        <div class="box" id="full-info" class="hidden">
+
+            <div class="column">
+                <div class="text-col" id="profile-pic">
+                    <span class="img-mask"><img src="" /></span>
+                </div>
+                <div class="text-col last" id="profile-name">
+                    <span></span>
+                    <button class="next">
+                        próximo<img src="images/arrow-right.svg">
+                    </button>
+                    <button class="last">
+                        <img src="images/arrow-left.svg">anterior
+                    </button>
+                </div>
+
+                <div class="text-col" id="basic-info">
+                    <div class="clickable" data-prop="age"><b>Idade:</b> 
+                        <span id="info-idade"></span>
+                    </div>
+                    <div class="clickable" data-prop="gender"><b>Sexo:</b> 
+                        <span id="info-genero"></span>
+                    </div>
+                    <div class="clickable" data-prop="education"><b>Escolaridade:</b> 
+                        <span id="info-estudo"></span>
+                    </div>
+                    <div class="clickable" data-prop="ethnicity"><b>Cor/Raça:</b> 
+                        <span id="info-raca"></span>
+                    </div>
+                    <div><b>Ocupação:</b> 
+                        <span id="info-profissao"></span>
+                    </div>
+                    <div><b>Partido:</b> 
+                        <span id="info-partido"></span>
+                    </div>
+                    <div><b>Coligação:</b> 
+                        <span id="info-coliga"></span>
+                    </div>
+                    <div><b>Já foi eleito?</b> 
+                        <span id="info-elected"></span>
+                    </div>
+                </div>
+
+                <div class="last" id="chart1">
+                    <div id="chart1-title"></div>
+                    <div id="chart1-container"></div>
+                </div>
+                <div class="clear"></div>
+
+                <div id="chart2-title">
+                    Patrimônio e histórico partidário
+                </div>
+                <div id="chart2">
+                    
+                </div>
+
+                <p>&nbsp;</p>
+                <p>&nbsp;</p>
+                <p>&nbsp;</p>
+                <p>&nbsp;</p>
+                <p>&nbsp;</p>
+                <p>&nbsp;</p>
+                <p>&nbsp;</p>
+            </div>
+        </div>
+
+        <div id="footer">
+            <div class="column">
+                <a title="Sobre o projeto" href="sobre.html" target="self">&raquo; Sobre o projeto</a>
+
+                
+                <a class="brand" title="Open Knowledge Brasil" href="https://br.okfn.org/" target="blank">
+                    <img src="images/logo-okbr-preta.png" />
+                </a>
+                <a class="brand" title="Intercept Brasil" href="https://theintercept.com/brasil/" target="blank">
+                    <img src="images/tibbr-logopreta.png" />
+                </a>
+
+                <a class="brand middle" title="Brasil.io" href="https://brasil.io/" target="blank">
+                    <img src="images/logo_br-io_preta.png" />
+                </a>
+
+            </div>
+        </div>
+
+        <div id="info-box" class="hidden"></div>
+
+        <div id="msg-box" class="hidden"> </div>
+
+
+
+        <script src="https://d3js.org/d3.v4.min.js"></script>
+        <script src="bundle.js"></script>
+    </body>
+</html>
