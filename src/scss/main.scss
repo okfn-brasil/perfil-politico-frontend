@@ -1040,6 +1040,18 @@ h3{
   clear: both;
   text-align: right;
 
+  .flex-container { display: flex }
+  .flex-item{
+    align-self: center;
+    margin-left: 3rem;
+    text-align: left;
+    &:first-child{
+      flex-grow: 2;
+      margin-left: 0;
+      text-align: right;
+    }
+  }
+
   .brand{
     display: inline-block;
     width: 150px;
