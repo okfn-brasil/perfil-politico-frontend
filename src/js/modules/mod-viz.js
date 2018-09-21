@@ -15,6 +15,7 @@ module.exports = function(){
 	let staticData = [];
 	let clickedBlock = null;
 	let clickedCandidate = -1;
+	let selectedChart = "age";
 	window.parseDate = d3.timeParse("%Y-%m-%d");
 
 	let setup = function(){
@@ -218,7 +219,7 @@ module.exports = function(){
 
 			return;
 		}else{
-			console.log(filteredData.length);
+			//console.log(filteredData.length);
 		}
 
 		/*filteredData = filteredData.sort(function(a, b){
@@ -301,13 +302,34 @@ module.exports = function(){
 		let dotRadius = Math.floor( (cellHeight/7)*5 )/2;
 		let blockWidth;
 		let initRadius = 0.5;
+		let nestedByParty;
 
 		d3.selectAll(".pc").remove();
+
+		nestedByParty = d3.nest()
+			.key(function(d) { return d.party; })
+			.rollup(function(leaves) { 
+				return {
+					count: leaves.length,
+					items: leaves
+				};
+			})
+			.entries(list)
+			.sort(function(a, b){ 
+				return d3.ascending(b.value.count, a.value.count); 
+			})
 
 		if(index > 0){
 			initRadius = blocks[index-1].select(".c").attr("r");
 			//console.log(initRadius);
 		}
+
+		var keys = d3.keys(nestedByParty);
+		list = [];
+		nestedByParty.forEach(function(obj, i){
+			list = list.concat(obj.value.items);
+		})
+
 
 		lin = Math.ceil(colHeight/cellWidth); 
 		col = Math.ceil(list.length/lin);
@@ -356,8 +378,7 @@ module.exports = function(){
 			.on("click", function(d, i){
 				clickedBlock = blockData;
 				clickedCandidate = i;
-				console.log("clicked "+i);
-				console.log(clickedBlock[0][clickedCandidate]);
+				//console.log(clickedBlock[0][clickedCandidate]);
 				loadCandidateData(d.id);
 			})
 			.attr("class", function(d){
@@ -472,7 +493,8 @@ module.exports = function(){
 				});
 
 		let pBox = document.querySelectorAll(".box-content")[index];
-		let newBlockY = pBox.offsetHeight + (wHeight*(index)) + 40;
+		let bHeight = block.node().getBBox().height;
+		let newBlockY = pBox.offsetTop + pBox.offsetHeight + 50;
 
 		blockWidth = block.node().getBBox().width + cellWidth;
 		block.attr("transform", 
@@ -521,9 +543,9 @@ module.exports = function(){
 					});
 		}
 
-		let filteredData = list;
+		/*let filteredData = list;
 		// new stuff
-		let nestedByParty = d3.nest()
+		nestedByParty = d3.nest()
 			.key(function(d) { return d.party; })
 			.rollup(function(leaves) { 
 				return leaves.length;
@@ -531,36 +553,39 @@ module.exports = function(){
 			.entries(filteredData)
 			.sort(function(a, b){ 
 				return d3.ascending(b.value, a.value); 
-			})
+			})*/
 
 		partyCharts[partyCharts.length] = svg.append("g")
 			.attr("id", "viz_"+blockData.length)
 			.attr("class", "pc")
-			.attr("transform", "translate(0," + (newBlockY + colHeight + 90) + ")");
+			.attr("transform", "translate(0," + (newBlockY + block.node().getBBox().height + 100) + ")");
 
-		let maxPValue = nestedByParty[0].value;
+		let maxPValue = nestedByParty[0].value.count;
 
 		partyCharts[partyCharts.length-1]
 			.selectAll(".party-bar")
 			.data(nestedByParty)
 			.enter()
 			.append("rect")
-			.attr("width", ((svgWidth-20)/nestedByParty.length) - 2)
+			.attr("width", function(){
+				let w = ((svgWidth-20)/nestedByParty.length) - 2;
+				if(w > 28){ w = 28; }
+				return w;
+			})
 			.attr("height", function(d,i){
-				return 1 + ((d.value/maxPValue)*50);
+				return 1 + ((d.value.count/maxPValue)*50);
 			})
 			.attr("x", function(d, i){
-				let width = (svgWidth-20)/nestedByParty.length;
-				return 10 + (i*width);
+				let w = ((svgWidth-20)/nestedByParty.length);
+				if(w > 30){ w = 30; }
+				return 10 + (i*w);
 			})
 			.attr("y", function(d, i){
-				let height = 1 + ((d.value/maxPValue)*50);
+				let height = 1 + ((d.value.count/maxPValue)*50);
 				return -height;
 			})
 			.attr("class", function(d,i){
 				let pClass = "party-bar";
-				console.log(d.key)
-				console.log(selectedParty)
 				if(d.key.toUpperCase() == selectedParty.toUpperCase()){
 					pClass += " highlighted";
 				}
@@ -584,8 +609,9 @@ module.exports = function(){
 			.attr("text-anchor", "end")
 			.attr("transform", "rotate(-90)")
 			.attr("y", function(d, i){
-				let width = (svgWidth-20)/nestedByParty.length;
-				return (width) + (i*width);
+				let w = ((svgWidth-20)/nestedByParty.length);
+				if(w > 30){ w = 30; }
+				return (w) + (i*w);
 			})
 			.attr("x", -5)
 			.text(function(d,i){
@@ -594,12 +620,20 @@ module.exports = function(){
 			.attr("data-index", blockData.length-1)
 			.on("click", function(d, i){
 				let index = d3.select(this).attr("data-index");
-				selectedParty = d.party;
+				selectedParty = d.key;
 
-				rebuildViz(index);
+				rebuildViz(index, true);
 
 				return;
 			});
+
+		let bW = svg.attr("width");
+		let partyBlock = partyCharts[partyCharts.length-1];
+		let pBlockW= partyBlock.node().getBBox().width;
+		partyBlock.attr("transform", 
+			"translate("+((bW/2) - (pBlockW/2))+"," + (newBlockY + block.node().getBBox().height + 100) + ")");
+
+		
 	}
 
 	let animateRemoved = function(prevBlock, removed){
@@ -789,6 +823,7 @@ module.exports = function(){
 
 		buttons.on("click", function(item, i){
 			let prop = d3.select(this).attr("data-prop");
+			selectedChart = prop;
 
 			buttons.classed("active", false);
 			d3.select(this).classed("active", true);
@@ -862,6 +897,8 @@ module.exports = function(){
 	    if(window.resizeChart1){
 	    	d3.selectAll("#chart1 svg").remove();
 	    	window.resizeChart1();
+	    	d3.selectAll("#chart1 svg").classed("active", false);
+			d3.select("#chart1 svg#chart-"+selectedChart).classed("active", true);
 	    }
 	    
 	}
