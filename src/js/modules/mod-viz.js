@@ -62,7 +62,7 @@ module.exports = function(){
 
 	window.init = function(){
 		let filters = window.currentFilters;
-		let listURL = url + filters.estado + "/" + filters.cargo;
+    let listURL = url + filters.estado + "/" + filters.cargo + "/";
 
 		d3.select("#full-info").classed("hidden", true);
 
@@ -120,10 +120,10 @@ module.exports = function(){
 			addBlock("");
 		});
 		staticURL = [
-			"https://api-perfilpolitico.serenata.ai/api/stats/2014/" + filters.cargo + "/age",
-			"https://api-perfilpolitico.serenata.ai/api/stats/2014/" + filters.cargo + "/education",
-			"https://api-perfilpolitico.serenata.ai/api/stats/2014/" + filters.cargo + "/gender",
-			"https://api-perfilpolitico.serenata.ai/api/stats/2014/" + filters.cargo + "/ethnicity"
+      "https://api-perfilpolitico.serenata.ai/api/stats/2014/" + filters.cargo + "/age/",
+      "https://api-perfilpolitico.serenata.ai/api/stats/2014/" + filters.cargo + "/education/",
+      "https://api-perfilpolitico.serenata.ai/api/stats/2014/" + filters.cargo + "/gender/",
+      "https://api-perfilpolitico.serenata.ai/api/stats/2014/" + filters.cargo + "/ethnicity/"
 		];
 
 		if(window.currentFilters.cargo != "presidente"){
