@@ -569,7 +569,7 @@ module.exports = function(){
 			.append("rect")
 			.attr("width", function(){
 				let w = ((svgWidth-20)/nestedByParty.length) - 2;
-				if(w > 28){ w = 28; }
+				if(w > 38){ w = 38; }
 				return w;
 			})
 			.attr("height", function(d,i){
@@ -577,8 +577,8 @@ module.exports = function(){
 			})
 			.attr("x", function(d, i){
 				let w = ((svgWidth-20)/nestedByParty.length);
-				if(w > 30){ w = 30; }
-				return 10 + (i*w);
+				if(w > 40){ w = 40; }
+				return (i*w);
 			})
 			.attr("y", function(d, i){
 				let height = 1 + ((d.value.count/maxPValue)*50);
@@ -610,8 +610,8 @@ module.exports = function(){
 			.attr("transform", "rotate(-90)")
 			.attr("y", function(d, i){
 				let w = ((svgWidth-20)/nestedByParty.length);
-				if(w > 30){ w = 30; }
-				return (w) + (i*w);
+				if(w > 40){ w = 40; }
+				return 2 + (w/2) + (i*w);
 			})
 			.attr("x", -5)
 			.text(function(d,i){
