@@ -2,8 +2,8 @@
 module.exports = function(){
 	const d3 = window.d3;
 	let selectedParty = "AVANTE";
-	let url = "http://api-perfilpolitico.serenata.ai/api/candidate/2018/";
-	let candURL = "http://api-perfilpolitico.serenata.ai/api/candidate/";
+	let url = "https://api-perfilpolitico.serenata.ai/api/candidate/2018/";
+	let candURL = "https://api-perfilpolitico.serenata.ai/api/candidate/";
 	let breakPoint = 580; // screen width
 	let margin, wHeight, wWidth, svgWidth, svgHeight, colWidth, colHeight;
 	let x, y, linePath, svg;
@@ -119,10 +119,10 @@ module.exports = function(){
 			addBlock("");
 		});
 		staticURL = [
-			"http://api-perfilpolitico.serenata.ai/api/stats/2014/" + filters.cargo + "/age",
-			"http://api-perfilpolitico.serenata.ai/api/stats/2014/" + filters.cargo + "/education",
-			"http://api-perfilpolitico.serenata.ai/api/stats/2014/" + filters.cargo + "/gender",
-			"http://api-perfilpolitico.serenata.ai/api/stats/2014/" + filters.cargo + "/ethnicity"
+			"https://api-perfilpolitico.serenata.ai/api/stats/2014/" + filters.cargo + "/age",
+			"https://api-perfilpolitico.serenata.ai/api/stats/2014/" + filters.cargo + "/education",
+			"https://api-perfilpolitico.serenata.ai/api/stats/2014/" + filters.cargo + "/gender",
+			"https://api-perfilpolitico.serenata.ai/api/stats/2014/" + filters.cargo + "/ethnicity"
 		];
 
 		if(window.currentFilters.cargo != "presidente"){

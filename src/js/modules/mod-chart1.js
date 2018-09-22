@@ -11,7 +11,7 @@ module.exports = function(){
 	let max, maxDate, minDate;
 	let chartData;
 	let infoTimeout, msgTimeout;
-	let baseURL = "http://api-perfilpolitico.serenata.ai/api/";
+	let baseURL = "https://api-perfilpolitico.serenata.ai/api/";
 	let ageURL;
 	let currPost;
 
