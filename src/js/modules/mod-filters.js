@@ -105,11 +105,10 @@ module.exports = function(filters){
 		}
 
 		if(filterType == "estado"){
-			window.currentFilters.estado_nome = d3.select(this).attr("data-name");
-			window.currentFilters.estado_prep = d3.select(this).attr("data-preposition");
+			window.currentFilters.estado_nome = d3.select("#filtro-estado option[selected]").attr("data-name");
+			window.currentFilters.estado_prep = d3.select("#filtro-estado option[selected]").attr("data-preposition");
 		}
-		//window.repopulateFilters();
-		//window.updateTitle();
+		
 		window.init();
 	});
 	

@@ -9,7 +9,7 @@ module.exports = function(){
 	let formatMoney = d3.format(",.2f");
 	let formatNumber = d3.format(".1f");
 	let max, maxDate, minDate;
-	let chartData;
+	let chartData, cData;
 	let infoTimeout, msgTimeout;
 	let baseURL = "https://api-perfilpolitico.serenata.ai/api/";
 	let ageURL;
@@ -22,11 +22,12 @@ module.exports = function(){
 		window.resizeChart1();
 	}
 
-	window.buildChart1 = function(staticData, cData){
+	window.buildChart1 = function(staticData, candData){
 		let chartBuild;
 
 		svg = [];
 		chartData = staticData;
+		cData = candData;
 
 		d3.selectAll("#chart1 svg").remove();
 
@@ -538,7 +539,7 @@ module.exports = function(){
 
 	    //console.log(colHeight);
 	    if(chartData){
-	    	window.buildChart1(chartData);
+	    	window.buildChart1(chartData, cData);
 	    	console.log("resize");
 	    }
 

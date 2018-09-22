@@ -521,7 +521,7 @@ p{
     }
 
     div{
-      padding: 0.4rem 0;
+      padding: 0.25rem 0;
 
       &.clickable{
         cursor: pointer;
@@ -614,7 +614,7 @@ p{
 
   }
 
-  @media (max-width: 768px){
+  @media (max-width:960px){
     width: 100%;
     float: none;
     clear: both;
@@ -634,10 +634,11 @@ p{
   font-weight: 700;
   padding-left: 2px;
 
-  @media (max-width: 580px){
+  @media (max-width: 960px){
     width: 100%;
     float: none;
     clear: both;
+    padding-top:3rem;
   }
 }
 
@@ -906,6 +907,7 @@ h3{
 
   .party-label{
     font-size: 1rem;
+    pointer-events: bounding-box;
     cursor: pointer;
 
     @media (max-width: 580px){
@@ -1040,18 +1042,6 @@ h3{
   clear: both;
   text-align: right;
 
-  .flex-container { display: flex }
-  .flex-item{
-    align-self: center;
-    margin-left: 3rem;
-    text-align: left;
-    &:first-child{
-      flex-grow: 2;
-      margin-left: 0;
-      text-align: right;
-    }
-  }
-
   .brand{
     display: inline-block;
     width: 150px;
@@ -1064,7 +1054,7 @@ h3{
     }
 
     @media (max-width: 768px){
-      width: 130px;
+      width: 110px;
     }
 
     @media (max-width: 580px){
@@ -1080,7 +1070,7 @@ h3{
 
     @media (max-width: 360px){
       display: inline-block;
-      width: 100px;
+      width: 95px;
       text-align: right;
 
       img{
@@ -1089,6 +1079,66 @@ h3{
       }
     }
   }
+
+  .flex-container { 
+    display: flex;
+    flex-wrap: wrap; 
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .flex-item{
+    font-size: 1.35rem;
+    align-self: center;
+    margin-left: auto;
+    text-align: left;
+    height: 100px;
+    align-self: flex-end;
+
+    &:first-child{
+      margin-left: 0;
+      align-self: flex-start;
+    }
+    &:last-child{
+      margin-left:1rem;
+      span{
+        margin-left: 18px;
+        display: block;
+      }
+    }
+    &:nth-child(2){
+      span{
+        margin-left: 10px;
+        display: block;
+      }
+    }
+    span{
+        margin-left: 18px;
+        display: block;
+    }
+
+    @media (max-width: 580px){
+
+      align-self: flex-start;
+      margin: 2rem auto 0 -10px;
+
+      /*width: 130px;*/
+      &:first-child{
+        margin: 2rem 0 0 0;
+        width: 100%;
+        height: 2rem;
+      }
+      &:nth-child(2){
+        margin: 3rem 0 0 -10px;
+      }
+      &:last-child{
+        margin: 3rem auto 0 0;
+      }
+
+    }
+  }
+
+  
 
   &.abs{
     /*position: absolute;*/
