@@ -63,23 +63,21 @@ module.exports = function(){
 	}
 
 	let calcColumnValues = function(){
-		colWidth = 468;
-		//parseInt(document.querySelector('#chart1').offsetWidth);
+		colWidth = parseInt(document.querySelector('#chart1').offsetWidth);
 		
 
 		if(colWidth > breakPoint){
 			colHeight = 180;//Math.round(colWidth*0.4);
 			margin = {top: 0, right: 0, bottom: 0, left: 0};
-		}else if(document.querySelector('.column').offsetWidth < 580){
+		}else if(document.querySelector('.column').offsetWidth <= 580){
 			colWidth = document.querySelector('.column').offsetWidth;
-			colHeight = 170;
+			colHeight = 180;
 			margin = {top: 0, right: 0, bottom: 0, left: 0};
 		}else{
 			colWidth = 460;
-			colHeight = 250;
+			colHeight = 230;
 			margin = {top: 0, right: 0, bottom: 0, left: 0};
 		}
-		console.log(colWidth);
 
 		if(colHeight < 180){
 			colHeight = 180;
@@ -540,7 +538,6 @@ module.exports = function(){
 	    //console.log(colHeight);
 	    if(chartData){
 	    	window.buildChart1(chartData, cData);
-	    	console.log("resize");
 	    }
 
 	}

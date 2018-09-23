@@ -22,11 +22,6 @@ module.exports = function(){
 	        /*when an item is clicked, update the original select box,
 	        and the selected item:*/
 
-	        /*if(window.contextFilters.indexOf(this.value) > -1){
-		      	return false;
-		    }else{
-		    	
-		    }*/
 		    if(this.classList.contains("disabled")){
 		    	return false;
 		    }
