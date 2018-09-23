@@ -673,9 +673,33 @@ module.exports = function(){
 			.on("click", function(d, i){
 				let index = d3.select(this).attr("data-index");
 				selectedParty = d.key;
+				
+				for(let j=0; j<blocks.length; j++){
+					blocks[j].selectAll(".c")
+					.each(function(dd,ii){
+						if(dd.party == selectedParty){
+							d3.select(this).classed("selected", true);
+						}else{
+							d3.select(this).classed("selected", false);
+						}
+					});
+					blocks[j].selectAll(".c-stroke")
+					.each(function(dd,ii){
+						if(dd.party == selectedParty){
+							d3.select(this).classed("selected", true);
+						}else{
+							d3.select(this).classed("selected", false);
+						}
+					});
 
-				if(index == blocks.length-1){
-					rebuildViz(index, true);
+					partyCharts[j].selectAll(".party-bar")
+					.each(function(dd,ii){
+						if(dd.key.toUpperCase() == selectedParty.toUpperCase()){
+							d3.select(this).classed("highlighted", true);
+						}else{
+							d3.select(this).classed("highlighted", false);
+						}
+					});
 				}
 
 				return;
@@ -702,7 +726,33 @@ module.exports = function(){
 				let index = d3.select(this).attr("data-index");
 				selectedParty = d.key;
 
-				rebuildViz(index, true);
+				for(let j=0; j<blocks.length; j++){
+					blocks[j].selectAll(".c")
+					.each(function(dd,ii){
+						if(dd.party == selectedParty){
+							d3.select(this).classed("selected", true);
+						}else{
+							d3.select(this).classed("selected", false);
+						}
+					});
+					blocks[j].selectAll(".c-stroke")
+					.each(function(dd,ii){
+						if(dd.party == selectedParty){
+							d3.select(this).classed("selected", true);
+						}else{
+							d3.select(this).classed("selected", false);
+						}
+					});
+
+					partyCharts[j].selectAll(".party-bar")
+					.each(function(dd,ii){
+						if(dd.key.toUpperCase() == selectedParty.toUpperCase()){
+							d3.select(this).classed("highlighted", true);
+						}else{
+							d3.select(this).classed("highlighted", false);
+						}
+					});
+				}
 
 				return;
 			});
@@ -1014,9 +1064,9 @@ module.exports = function(){
 			}else if(filterType == "já eleitos"){
 				phrase = prep[currGender] + ", <b>"+amount+"</b> já se elegeram anteriormente";
 			}else if(filterType == "negros ou pardos"){
-				phrase = prep[currGender] + ", <b>"+amount+"</b> são de cor/raça negra, parda ou indígena";
+				phrase = prep[currGender] + ", <b>"+amount+"</b> são de cor negra, parda ou indígena";
 			}else if(filterType == "brancos"){
-				phrase = prep[currGender] + ", <b>"+amount+"</b> são de cor/raça branca";
+				phrase = prep[currGender] + ", <b>"+amount+"</b> são de cor branca";
 			}
 		}else{
 			color = colorPl;
@@ -1033,9 +1083,9 @@ module.exports = function(){
 			}else if(filterType == "já eleitos"){
 				phrase = prep[currGender] + ", <b>"+amount+"</b> já se elegeu";
 			}else if(filterType == "negros ou pardos"){
-				phrase = prep[currGender] + ", <b>"+amount+"</b> é de cor/raça negra, parda ou indígena";
+				phrase = prep[currGender] + ", <b>"+amount+"</b> é de cor negra, parda ou indígena";
 			}else if(filterType == "brancos"){
-				phrase = prep[currGender] + ", <b>"+amount+"</b> é de cor/raça branca";
+				phrase = prep[currGender] + ", <b>"+amount+"</b> é de cor branca";
 			}
 		}
 		
