@@ -3,8 +3,8 @@ var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.
 
 // globals
 window.d3 = require("d3");
-let ptBR = require("./data/locale-pt_BR");
-window.d3.timeFormatDefaultLocale(ptBR);
+let ptBR_data = require("./data/locale-pt_BR");
+window.ptBR = window.d3.formatLocale(ptBR_data);
 
 //window.data = require("./data/data");// temporary fake list
 window.filters = require("./data/filters");// to populate the selects
