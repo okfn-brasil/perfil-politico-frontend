@@ -348,7 +348,8 @@ module.exports = function(){
 		list = [];
 		nestedByParty.forEach(function(obj, i){
 			list = list.concat(obj.value.items);
-		})
+		});
+		//selectedParty = list[0].party.toUpperCase();
 
 
 		lin = Math.ceil(colHeight/cellWidth); 
@@ -637,7 +638,9 @@ module.exports = function(){
 				let index = d3.select(this).attr("data-index");
 				selectedParty = d.key;
 
-				rebuildViz(index, true);
+				if(index == blocks.length-1){
+					rebuildViz(index, true);
+				}
 
 				return;
 			});
