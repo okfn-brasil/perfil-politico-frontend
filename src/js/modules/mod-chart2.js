@@ -6,7 +6,7 @@ module.exports = function(){
 	let x, y, assetsLine, svg, xAxis, yAxis;
 	let parent;
 	let parseYear = d3.timeParse("%Y");
-	let formatMoney = d3.format(",.2f");
+	let formatMoney = window.ptBR.format("$,.2f");
 	let formatNumber = d3.format(".2f");
 	let max, maxDate, minDate;
 	let chartData;
@@ -188,9 +188,9 @@ module.exports = function(){
 			.attr("cy", function(d, i){
 				return y(d.value);
 			})
-		  	.on("mouseover", function(d){
+		  	.on("mouseover click", function(d){
 				d3.select("#info-box").html(function() { 
-					return "<b>R$</b>" + formatMoney(d.value); 
+					return formatMoney(d.value); 
 				});
 				d3.select("#info-box").classed("hidden", false);
 				d3.select("#info-box").classed("smaller", true);
@@ -209,12 +209,17 @@ module.exports = function(){
 				let height = d3.select("#info-box").node().offsetHeight;
 				let width = d3.select("#info-box").node().offsetWidth;
 
-				if(coordinates[0] > colWidth - width){
+				/*if(coordinates[0] > colWidth - width){
 					coordinates[0] -= width;
 				}
 
 				if(colWidth < 480){
 					coordinates[0] = colWidth/2 - (width/2) + 20;
+				}*/
+				if(coordinates[0] < 0){
+					coordinates[0] = 0;
+				}else if(coordinates[0] > colWidth - width){
+					coordinates[0] = colWidth - width;
 				}
 
 				d3.select("#info-box")
@@ -242,8 +247,8 @@ module.exports = function(){
 		  	console.log(d.started_in);
 		  	console.log(x(window.parseDate(d.started_in)));
 		  })
-			.on("mouseover", function(d){
-				d3.select("#info-box").html(d.started_in.replaceAll("-", "/"));
+			.on("mouseover click", function(d){
+				d3.select("#info-box").html(formatDate(d.started_in));
 				d3.select("#info-box").classed("hidden", false);
 				d3.select("#info-box").classed("smaller", true);
 				
@@ -261,14 +266,11 @@ module.exports = function(){
 				let height = d3.select("#info-box").node().offsetHeight;
 				let width = d3.select("#info-box").node().offsetWidth;
 
-				if(coordinates[0] > colWidth - width){
-					coordinates[0] -= width;
+				if(coordinates[0] < 0){
+					coordinates[0] = 0;
+				}else if(coordinates[0] > colWidth - width){
+					coordinates[0] = colWidth - width;
 				}
-
-				if(colWidth < 480){
-					coordinates[0] = colWidth/2 - (width/2) + 20;
-				}
-
 				d3.select("#info-box")
 					.attr("style", "margin-left: " +(coordinates[0])+ "px; margin-top: "+(coordinates[1] - height - 15)+"px");
 				
@@ -301,6 +303,14 @@ module.exports = function(){
 			});*/
 	}
 
+	let formatDate = function(value){
+		let date = value.split("-");
+
+		date.reverse();
+		let newDate = date.join("/");
+
+		return newDate;
+	}
 
 	let customXAxis = function(g) {
 	  g.call(xAxis);

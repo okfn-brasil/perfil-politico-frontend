@@ -58,10 +58,12 @@ module.exports = function(){
 		d3.select(window).on('resize', window.resize);
 
 		d3.select("body").on("click",function(){
-			var tooltippedContent = d3.selectAll(".c");
+			var tooltippedContent = d3.selectAll(".c, .asset-point, .affil-point");
 		    var outside = tooltippedContent.filter(equalToEventTarget).empty();
 		    if (outside) {
 		        d3.select("#info-box").classed("hidden", true);
+		    }else{
+		    	d3.select("#info-box").classed("hidden", false);
 		    }
 		});
 
@@ -434,9 +436,10 @@ module.exports = function(){
 				return "c_"+index+"_"+d.id;
 			})
 			.on("click", function(d, i){
-				clickedBlock = blockData;
+				clickedBlock = blockData[index];
 				clickedCandidate = i;
-				//console.log(clickedBlock[0][clickedCandidate]);
+
+
 				loadCandidateData(d.id);
 			})
 			.attr("class", function(d){
@@ -632,7 +635,7 @@ module.exports = function(){
 			partyCharts[index].remove();
 		}
 		partyCharts[index] = svg.append("g")
-			.attr("id", "viz_"+blockData.length)
+			.attr("id", "pc_"+blockData.length)
 			.attr("class", "pc");
 
 		let maxPValue = nestedByParty[0].value.count;
@@ -927,21 +930,21 @@ module.exports = function(){
 			if(clickedCandidate > 0){
 				clickedCandidate -= 1;
 			}else{
-				clickedCandidate = clickedBlock[0].length-1;
+				clickedCandidate = clickedBlock.length-1;
 			}
 
-			loadCandidateData(clickedBlock[0][clickedCandidate].id);
+			loadCandidateData(clickedBlock[clickedCandidate].id);
 		})
 
 		arrowRight.on("click", function(item, i){
 
-			if(clickedCandidate < clickedBlock[0].length-1){
+			if(clickedCandidate < clickedBlock.length-1){
 				clickedCandidate += 1;
 			}else{
 				clickedCandidate = 0;
 			}
 
-			loadCandidateData(clickedBlock[0][clickedCandidate].id);
+			loadCandidateData(clickedBlock[clickedCandidate].id);
 		})
 	}
 
