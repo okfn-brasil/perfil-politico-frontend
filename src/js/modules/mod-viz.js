@@ -53,7 +53,7 @@ module.exports = function(){
 			addBlock(selected);
 		});
 
-		d3.select("#full-info").classed("hidden", true);
+		d3.select("#full-info-content").classed("hidden", true);
 		window.resize();
 		d3.select(window).on('resize', window.resize);
 
@@ -63,8 +63,13 @@ module.exports = function(){
 		    if (outside) {
 		        d3.select("#info-box").classed("hidden", true);
 		    }
+		});
 
-		    console.log();
+		d3.select(".restart-bt").on("click",function(){
+			window.init();
+
+			document.body.scrollTop = 0; // For Safari
+    		document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
 		});
 
 		window.init();
@@ -74,7 +79,7 @@ module.exports = function(){
 		let filters = window.currentFilters;
     	let listURL = url + filters.estado + "/" + filters.cargo + "/";
 
-		d3.select("#full-info").classed("hidden", true);
+		d3.select("#full-info-content").classed("hidden", true);
 		d3.selectAll(".disabled").classed("disabled", false);
 
 		d3.selectAll(".select-items").remove();
@@ -185,13 +190,25 @@ module.exports = function(){
 		}
 
 		if(filterType == "nunca eleitos"){
+			disableQuestion("já eleitos");
 			filteredData = filteredData.filter(function(c) {
 				return c.elections_won == 0;
 			});
 			removed = prevCandidates.filter(function(d,i){
 				return d.elections_won == 0;
 			});
+		}else if(filterType == "já eleitos"){
+			disableQuestion("nunca eleitos");
+			disableQuestion("nunca concorreram");
+			filteredData = filteredData.filter(function(c) {
+				return c.elections_won > 1;
+			});
+			removed = prevCandidates.filter(function(d,i){
+				return d.elections_won > 1;
+			}); 
 		}else if(filterType == "nunca concorreram"){
+			disableQuestion("já eleitos");
+			disableQuestion("nunca eleitos");
 			filteredData = filteredData.filter(function(c) {
 				return c.elections == 0;
 			});
@@ -199,13 +216,31 @@ module.exports = function(){
 				return d.elections == 0;
 			}); 
 		}else if(filterType == "mulheres"){
+			disableQuestion("homens");
 			filteredData = filteredData.filter(function(c) {
 				return c.gender.toLowerCase() == "feminino";
 			});
 			removed = prevCandidates.filter(function(d,i){
 				return d.gender.toLowerCase() == "feminino";
 			});
+		}else if(filterType == "homens"){
+			disableQuestion("mulheres");
+			filteredData = filteredData.filter(function(c) {
+				return c.gender.toLowerCase() != "feminino";
+			});
+			removed = prevCandidates.filter(function(d,i){
+				return d.gender.toLowerCase() != "feminino";
+			});
+		}else if(filterType == "brancos"){
+			disableQuestion("negros ou pardos");
+			filteredData = filteredData.filter(function(c) {
+				return c.ethnicity.toLowerCase() == "branca";
+			});
+			removed = prevCandidates.filter(function(d,i){
+				return d.ethnicity.toLowerCase() == "branca";
+			});
 		}else if(filterType == "negros ou pardos"){
+			disableQuestion("brancos");
 			filteredData = filteredData.filter(function(c) {
 				return c.ethnicity.toLowerCase() == "preta" || 
 					c.ethnicity.toLowerCase() == "parda" || 
@@ -242,10 +277,6 @@ module.exports = function(){
 		}else{
 			//console.log(filteredData.length);
 		}
-
-		/*filteredData = filteredData.sort(function(a, b){
-		   return d3.ascending(a.party, b.party);
-		});*/
 		
 		blockData.push(filteredData);
 
@@ -327,7 +358,11 @@ module.exports = function(){
 		let partyBlock;
 		let bW, currBlockTop, pBox, pRect, newBlockY, pBlockW, currBlockH;
 
-		//d3.selectAll(".pc").remove();
+		if(blocks.length > 1){
+			d3.select(".restart-bt").classed("hidden", false);
+		}else{
+			d3.select(".restart-bt").classed("hidden", true);
+		}
 
 		nestedByParty = d3.nest()
 			.key(function(d) { return d.party; })
@@ -349,13 +384,11 @@ module.exports = function(){
 		nestedByParty.forEach(function(obj, i){
 			list = list.concat(obj.value.items);
 		});
-		//selectedParty = list[0].party.toUpperCase();
-
 
 		lin = Math.ceil(colHeight/cellWidth); 
 		col = Math.ceil(list.length/lin);
 
-		//console.log(col*cellWidth, colWidth);
+
 		if(list.length <= 10 &&
 			(colWidth >= breakPoint) ){
 			cellWidth = (colWidth)/list.length;
@@ -767,7 +800,7 @@ module.exports = function(){
 	}
 
 	let loadCandidateData = function(id) {
-		let infoBlock = d3.select("#full-info").node();
+		let infoBlock = d3.select("#full-info-content").node();
 
 	    d3.json(candURL+id+"/", function(error, cData){
 	 		d3.select("#chart2").classed("hidden", true);
@@ -786,8 +819,6 @@ module.exports = function(){
 	    	}else if(cData){
 	    		fillCandidateInfo(cData);
 
-				
-
 	    		// fake click event
 	    		// only if not president
 	    		if(window.currentFilters.cargo != "presidente"){
@@ -804,7 +835,7 @@ module.exports = function(){
 	    		window.buildChart2(cData);
 				window.resizeChart2();
 
-	    		d3.select("#full-info").classed("hidden", false);
+	    		d3.select("#full-info-content").classed("hidden", false);
     			smoothScroll(infoBlock.offsetTop, 6);
 	    	}
 			
@@ -860,6 +891,19 @@ module.exports = function(){
     	d3.select("#info-coliga")
     		.text(correctParty(cData.coalition_description));
 		//d3.select("#info-partido").text();
+	}
+
+	let disableQuestion = function(type){
+		let questions = document.querySelectorAll("#filtro-perguntas option");
+		let questionsCustom = document.querySelectorAll("#questions .select-items div");
+		
+		for(let i=0; i<questionsCustom.length; i++){
+
+			if(questionsCustom[i].getAttribute("data-value") == type){
+				questionsCustom[i].classList.add("disabled");
+				questions[i+1].setAttribute("disabled", true);
+			}
+		}
 	}
 
 	let initFileEvents = function(){
@@ -921,7 +965,7 @@ module.exports = function(){
 		}
 
 	    svgHeight = wHeight*blockData.length;
-	    svgWidth = colWidth + 20;
+	    svgWidth = colWidth + 0;
 
 	    if(svg){
 
