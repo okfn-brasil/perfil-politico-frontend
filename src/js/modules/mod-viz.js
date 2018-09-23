@@ -997,37 +997,42 @@ module.exports = function(){
 	let getDescription = function(filterType, amount){
 		let phrase = "";
 		let prep = { m: "Destes", f: "Destas"};
-		let color = { 
-			m: "negros, pardos ou indígenas", 
-			f: "negras, pardas ou indígenas"
-		};
-		let colorPl = { 
-			m: "negro, pardo ou indígena", 
-			f: "negra, parda ou indígena"
-		};
 
 		if(amount > 1){
 			if(filterType == "mulheres"){
 				phrase = prep[currGender] + ", <b>"+amount+"</b> são mulheres";
 				currGender = "f";
+			}else if(filterType == "homens"){
+				phrase = prep[currGender] + ", <b>"+amount+"</b> são homens";
 			}else if(filterType == "nunca concorreram"){
 				phrase = prep[currGender] + ", <b>"+amount+"</b> nunca concorreram numa eleição";
 			}else if(filterType == "nunca eleitos"){
-				phrase = prep[currGender] + ", <b>"+amount+"</b> nunca foram eleitos";
+				phrase = prep[currGender] + ", <b>"+amount+"</b> nunca se elegeram";
+			}else if(filterType == "já eleitos"){
+				phrase = prep[currGender] + ", <b>"+amount+"</b> já se elegeram anteriormente";
 			}else if(filterType == "negros ou pardos"){
-				phrase = prep[currGender] + ", <b>"+amount+"</b> são "+color[currGender];
+				phrase = prep[currGender] + ", <b>"+amount+"</b> são de cor/raça negra, parda ou indígena";
+			}else if(filterType == "brancos"){
+				phrase = prep[currGender] + ", <b>"+amount+"</b> são de cor/raça branca";
 			}
 		}else{
 			color = colorPl;
 			if(filterType == "mulheres"){
 				phrase = prep[currGender] + ", <b>"+amount+"</b> é mulher";
 				currGender = "f";
+			}if(filterType == "homens"){
+				phrase = prep[currGender] + ", <b>"+amount+"</b> é homem";
+				currGender = "m";
 			}else if(filterType == "nunca concorreram"){
 				phrase = prep[currGender] + ", <b>"+amount+"</b> nunca concorreu numa eleição";
 			}else if(filterType == "nunca eleitos"){
 				phrase = prep[currGender] + ", <b>"+amount+"</b> nunca se elegeu";
+			}else if(filterType == "já eleitos"){
+				phrase = prep[currGender] + ", <b>"+amount+"</b> já se elegeu";
 			}else if(filterType == "negros ou pardos"){
-				phrase = prep[currGender] + ", <b>"+amount+"</b> é "+color[currGender];
+				phrase = prep[currGender] + ", <b>"+amount+"</b> é de cor/raça negra, parda ou indígena";
+			}else if(filterType == "brancos"){
+				phrase = prep[currGender] + ", <b>"+amount+"</b> é de cor/raça branca";
 			}
 		}
 		
