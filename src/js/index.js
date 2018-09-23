@@ -9,7 +9,7 @@ window.d3.timeFormatDefaultLocale(ptBR);
 //window.data = require("./data/data");// temporary fake list
 window.filters = require("./data/filters");// to populate the selects
 let populateFilters = require("./modules/mod-filters");
-let customSelects = require("./modules/mod-select");
+window.customSelects = require("./modules/mod-select");
 let viz = require("./modules/mod-viz");
 let chart2 = require("./modules/mod-chart2");
 let chart1 = require("./modules/mod-chart1");
@@ -23,7 +23,7 @@ window.currentFilters = {
 }
 
 populateFilters(window.filters);
-customSelects();
+window.customSelects();
 viz();
 chart2();
 chart1();

@@ -57,19 +57,40 @@ module.exports = function(){
 		window.resize();
 		d3.select(window).on('resize', window.resize);
 
+		d3.select("body").on("click",function(){
+			var tooltippedContent = d3.selectAll(".c");
+		    var outside = tooltippedContent.filter(equalToEventTarget).empty();
+		    if (outside) {
+		        d3.select("#info-box").classed("hidden", true);
+		    }
+
+		    console.log();
+		});
+
 		window.init();
 	}
 
 	window.init = function(){
 		let filters = window.currentFilters;
-    let listURL = url + filters.estado + "/" + filters.cargo + "/";
+    	let listURL = url + filters.estado + "/" + filters.cargo + "/";
 
 		d3.select("#full-info").classed("hidden", true);
+		d3.selectAll(".disabled").classed("disabled", false);
+
+		d3.selectAll(".select-items").remove();
+		d3.selectAll(".select-selected").remove();
+		d3.selectAll("#filtro-perguntas option[disabled]")
+			.attr("disabled", false);
+		document.querySelector("#filtro-perguntas").selectedIndex = "0";
+
+			
+		window.customSelects();
 
 		// reset control arrays
 		blockData = [];
 		blocks = [];
 		staticData = [];
+		partyCharts = [];
 		clickedBlock = null;
 		clickedCandidate = -1;
 
@@ -78,7 +99,7 @@ module.exports = function(){
 
 		// add svg wrapper with initial size
 		if(svg){ svg.remove(); svg = null };
-		d3.selectAll(".pc").remove();
+		//d3.selectAll(".pc").remove();
 
 		d3.selectAll(".box-content:not(.first)").remove();
 		d3.selectAll(".d-height:not(.first)").remove();
@@ -149,7 +170,7 @@ module.exports = function(){
 		let text;
 		let selectedOption = document.querySelector("option[value='"+filterType+"']")
 		let h2Title = "";
-		let prevCandidates, removed, prevBlock, temp;
+		let prevCandidates, removed, prevBlock, temp, pBox, newBlockY;
 
 		window.contextFilters.push(filterType);
 		//console.log(blockData);
@@ -231,6 +252,7 @@ module.exports = function(){
 		svgHeight = wHeight*(blockData.length);
 
 		svg.attr("viewBox", "0 0 " +svgWidth+ " " + svgHeight)
+			.attr("preserveAspectRatio", "none slice")
 			.attr("width", svgWidth)
 			.attr("height", svgHeight);
 
@@ -254,14 +276,13 @@ module.exports = function(){
 				.html(text);
 		}
 
-		let pBox = document.querySelectorAll(".box-content")[blockData.length-1];
-		let newBlockY = pBox.offsetHeight + 45 + (wHeight*(blockData.length-1));
+		pBox = document.querySelectorAll(".box-content")[blockData.length-1];
+		newBlockY = pBox.offsetHeight + (wHeight*(blockData.length-1));
 
 		//
 		newBlock = svg.append("g")
 			.attr("id", "viz_"+blockData.length)
-			.attr("class", "viz")
-			.attr("transform", "translate(0," + newBlockY + ")")
+			.attr("class", "viz");
 
 		blocks.push(newBlock); 
 
@@ -303,8 +324,10 @@ module.exports = function(){
 		let blockWidth;
 		let initRadius = 0.5;
 		let nestedByParty;
+		let partyBlock;
+		let bW, currBlockTop, pBox, pRect, newBlockY, pBlockW, currBlockH;
 
-		d3.selectAll(".pc").remove();
+		//d3.selectAll(".pc").remove();
 
 		nestedByParty = d3.nest()
 			.key(function(d) { return d.party; })
@@ -319,10 +342,7 @@ module.exports = function(){
 				return d3.ascending(b.value.count, a.value.count); 
 			})
 
-		if(index > 0){
-			initRadius = blocks[index-1].select(".c").attr("r");
-			//console.log(initRadius);
-		}
+		
 
 		var keys = d3.keys(nestedByParty);
 		list = [];
@@ -365,6 +385,10 @@ module.exports = function(){
 		dotRadius = Math.floor( (cellHeight/7)*5 )/2;
 		block.selectAll(".c").remove();
 		block.selectAll(".c-stroke").remove();
+
+		if(index > 0){
+			initRadius = dotRadius;
+		}
 
 		let candidates = block.selectAll("circle")
 			.data(list)
@@ -471,7 +495,6 @@ module.exports = function(){
 				
 				clearTimeout(infoTimeout);
 			})
-			
 			.transition()
 				.attr("r", dotRadius)
 				.ease(d3.easeElastic)
@@ -479,26 +502,37 @@ module.exports = function(){
 					let random = Math.random()*20; 
 
 					if(noAnim){
-						return 0
+						return 0;
+					}else{
+						return random*30;
 					}
-					return random*50;
 				})
 				.duration(function(d,i){ 
 					let random = Math.random()*20; 
 
 					if(noAnim){
 						return 0
+					}else{
+						return 300 + (10*random);
 					}
-					return 500 + (10*random);
+					
+				})
+				.on("end", function(d,i){
+					if(i == list.length-1){
+						newBlockY = pBox.offsetTop + pBox.offsetHeight;
+						blockWidth = block.node().getBBox().width + dotRadius;
+						block.attr("transform", 
+						"translate("+ (bW - blockWidth)/2 +"," + newBlockY + ")");
+					}
 				});
 
-		let pBox = document.querySelectorAll(".box-content")[index];
-		let bHeight = block.node().getBBox().height;
-		let newBlockY = pBox.offsetTop + pBox.offsetHeight + 50;
+		bW = svgWidth;
+		pBox = document.querySelectorAll(".box-content")[index];
+		newBlockY = pBox.offsetTop + pBox.offsetHeight;
 
-		blockWidth = block.node().getBBox().width + cellWidth;
+		blockWidth = block.node().getBBox().width + (dotRadius*2);
 		block.attr("transform", 
-			"translate("+ (colWidth - blockWidth)/2 +"," + newBlockY + ")")
+						"translate("+ (bW - blockWidth)/2 +"," + newBlockY + ")");
 		
 		if(list.length <= 20){
 			let candidateStrokes = block.selectAll("circle");
@@ -555,29 +589,36 @@ module.exports = function(){
 				return d3.ascending(b.value, a.value); 
 			})*/
 
-		partyCharts[partyCharts.length] = svg.append("g")
+		let maxPartyW = 90;
+		if(nestedByParty.length <= 6){
+			maxPartyW = 40
+		}
+
+		if(partyCharts[index]){
+			partyCharts[index].remove();
+		}
+		partyCharts[index] = svg.append("g")
 			.attr("id", "viz_"+blockData.length)
-			.attr("class", "pc")
-			.attr("transform", "translate(0," + (newBlockY + block.node().getBBox().height + 100) + ")");
+			.attr("class", "pc");
 
 		let maxPValue = nestedByParty[0].value.count;
 
-		partyCharts[partyCharts.length-1]
+		partyCharts[index]
 			.selectAll(".party-bar")
 			.data(nestedByParty)
 			.enter()
 			.append("rect")
 			.attr("width", function(){
-				let w = ((svgWidth-20)/nestedByParty.length) - 2;
-				if(w > 38){ w = 38; }
+				let w = ((blockWidth-10)/nestedByParty.length) - 2;
+				if(w > maxPartyW-2){ w = maxPartyW-2; }
 				return w;
 			})
 			.attr("height", function(d,i){
 				return 1 + ((d.value.count/maxPValue)*50);
 			})
 			.attr("x", function(d, i){
-				let w = ((svgWidth-20)/nestedByParty.length);
-				if(w > 40){ w = 40; }
+				let w = ((blockWidth-10)/nestedByParty.length);
+				if(w > maxPartyW){ w = maxPartyW; }
 				return (i*w);
 			})
 			.attr("y", function(d, i){
@@ -600,7 +641,7 @@ module.exports = function(){
 
 				return;
 			});
-		partyCharts[partyCharts.length-1]
+		partyCharts[index]
 			.selectAll(".party-label")
 			.data(nestedByParty)
 			.enter()
@@ -609,8 +650,8 @@ module.exports = function(){
 			.attr("text-anchor", "end")
 			.attr("transform", "rotate(-90)")
 			.attr("y", function(d, i){
-				let w = ((svgWidth-20)/nestedByParty.length);
-				if(w > 40){ w = 40; }
+				let w = ((blockWidth-10)/nestedByParty.length);
+				if(w > maxPartyW){ w = maxPartyW; }
 				return 2 + (w/2) + (i*w);
 			})
 			.attr("x", -5)
@@ -627,11 +668,12 @@ module.exports = function(){
 				return;
 			});
 
-		let bW = svg.attr("width");
-		let partyBlock = partyCharts[partyCharts.length-1];
-		let pBlockW= partyBlock.node().getBBox().width;
+		bW = svg.attr("width");
+		partyBlock = partyCharts[index];
+		pBlockW= partyBlock.node().getBBox().width;
+		currBlockH= block.node().getBBox().height;
 		partyBlock.attr("transform", 
-			"translate("+((bW/2) - (pBlockW/2))+"," + (newBlockY + block.node().getBBox().height + 100) + ")");
+			"translate("+((bW/2) - (pBlockW/2))+"," + (newBlockY + currBlockH + 110) + ")");
 
 		
 	}
@@ -757,6 +799,7 @@ module.exports = function(){
 	    		}
 	    		d3.selectAll("#chart2 svg").remove();
 	    		window.buildChart2(cData);
+				window.resizeChart2();
 
 	    		d3.select("#full-info").classed("hidden", false);
     			smoothScroll(infoBlock.offsetTop, 6);
@@ -840,8 +883,6 @@ module.exports = function(){
 				clickedCandidate = clickedBlock[0].length-1;
 			}
 
-			console.log(clickedCandidate);
-
 			loadCandidateData(clickedBlock[0][clickedCandidate].id);
 		})
 
@@ -852,7 +893,6 @@ module.exports = function(){
 			}else{
 				clickedCandidate = 0;
 			}
-			console.log(clickedCandidate);
 
 			loadCandidateData(clickedBlock[0][clickedCandidate].id);
 		})
@@ -860,7 +900,8 @@ module.exports = function(){
 
 	window.resize = function(){
 		wHeight = parseInt(window.innerHeight);
-		colWidth = parseInt(d3.select('.column').style('width'));
+		colWidth = parseInt(document.querySelector('.column').offsetWidth) - 40;
+
 
 		if(colWidth > breakPoint){
 			colHeight = wHeight - 580;//Math.round(colWidth*0.4);
@@ -877,9 +918,12 @@ module.exports = function(){
 		}
 
 	    svgHeight = wHeight*blockData.length;
-	    svgWidth = colWidth;
+	    svgWidth = colWidth + 20;
 
 	    if(svg){
+
+		  svg.selectAll("pattern").remove();
+
 	      svg.attr("viewBox", "0 0 " +svgWidth+ " " + svgHeight)
 			.attr("width", svgWidth)
 			.attr("height", svgHeight)
@@ -887,7 +931,7 @@ module.exports = function(){
 
 	    blocks.forEach(function(item, i){
 	    	//let vizdata = blockData[i];
-	    	rebuildViz(i);
+	    	rebuildViz(i, true);
 	    });
 
 	    if(window.resizeChart2){
@@ -903,14 +947,17 @@ module.exports = function(){
 	    
 	}
 
-	let printData = function(data){
-		console.log(data);
-	}
-
 	let getDescription = function(filterType, amount){
 		let phrase = "";
 		let prep = { m: "Destes", f: "Destas"};
-		let color = { m: "negros, pardos ou indígenas", f: "negras, pardas ou indígenas"};
+		let color = { 
+			m: "negros, pardos ou indígenas", 
+			f: "negras, pardas ou indígenas"
+		};
+		let colorPl = { 
+			m: "negro, pardo ou indígena", 
+			f: "negra, parda ou indígena"
+		};
 
 		if(amount > 1){
 			if(filterType == "mulheres"){
@@ -924,13 +971,14 @@ module.exports = function(){
 				phrase = prep[currGender] + ", <b>"+amount+"</b> são "+color[currGender];
 			}
 		}else{
+			color = colorPl;
 			if(filterType == "mulheres"){
 				phrase = prep[currGender] + ", <b>"+amount+"</b> é mulher";
 				currGender = "f";
 			}else if(filterType == "nunca concorreram"){
 				phrase = prep[currGender] + ", <b>"+amount+"</b> nunca concorreu numa eleição";
 			}else if(filterType == "nunca eleitos"){
-				phrase = prep[currGender] + ", <b>"+amount+"</b> nunca foi eleito";
+				phrase = prep[currGender] + ", <b>"+amount+"</b> nunca se elegeu";
 			}else if(filterType == "negros ou pardos"){
 				phrase = prep[currGender] + ", <b>"+amount+"</b> é "+color[currGender];
 			}
@@ -944,6 +992,20 @@ module.exports = function(){
 }
 
 // utilitary functions
+let getElementOffset = function(el) {
+  const rect = el.getBoundingClientRect();
+
+  return rect.top + window.pageYOffset;
+}
+let getElementHeight = function(el) {
+  const rect = el.getBoundingClientRect();
+
+  return rect.height;
+}
+
+let equalToEventTarget = function() {
+    return this == d3.event.target;
+}
 let correctParty = function(party){
 	let corrected = party.toUpperCase();
 	

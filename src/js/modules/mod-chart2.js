@@ -17,6 +17,7 @@ module.exports = function(){
 		//
 		d3.select("#chart2").classed("hidden", true);
 		d3.select("#chart2-title").classed("hidden", true);
+		d3.select("#chart2-title").html("");
 		window.resizeChart2();
 	}
 	
@@ -27,6 +28,7 @@ module.exports = function(){
 		d3.selectAll("#chart2 svg").remove();
 		d3.select("#chart2").classed("hidden", true);
 		d3.select("#chart2-title").classed("hidden", true);
+		d3.select("#chart2-title").html("");
 
 		if(data){
 			chartData = data;
@@ -34,14 +36,29 @@ module.exports = function(){
 			assets = chartData.asset_history;
 		}
 
-		if( !chartData || (affiliations.length <= 1 && assets.length <= 1) ){
-			//chartData = null;
+		if( !chartData || 
+			(!affiliations && !assets) ||
+			(affiliations.length < 1 && assets.length < 1) ){
+			
 			return;
 		}else{
 			d3.select("#chart2").classed("hidden", false);
 			d3.select("#chart2-title").classed("hidden", false);
 		}
 
+		if(affiliations.length < 1 && assets.length < 1){
+			d3.select("#chart2-title").html("");
+			d3.select("#chart2").classed("hidden", true);
+		}else if(affiliations.length < 1 && assets.length >= 1){
+			d3.select("#chart2-title").html("Patrimônio declarado");
+		}else if(affiliations.length >= 1 && assets.length < 1){
+			d3.select("#chart2-title").html("Histórico partidário");
+		}else{
+			d3.select("#chart2-title").html("Patrimônio declarado e histórico partidário");
+		}
+
+		d3.select("#chart2").classed("hidden", false);
+		d3.select("#chart2-title").classed("hidden", false);
 
 		d3.select("#chart2-svg").remove();
 
@@ -68,7 +85,6 @@ module.exports = function(){
 			return d.year;
 		});
 
-
 		maxDate = new Date(2018, 11, 30);
 		//console.log(maxDate);
 
@@ -86,7 +102,7 @@ module.exports = function(){
 		}));
 
 		if(minDate.getTime() == maxDate.getTime()){
-			minDate = new Date(maxDate.getFullYear()-1, 1, 1);
+			minDate = new Date(maxDate.getFullYear()-1, 0, 1);
 		}
 
 		if(earliestYear && earliestYear < minDate.getFullYear()){
@@ -130,15 +146,6 @@ module.exports = function(){
 		    .x(function(d) { return x( new Date(d.year, 0, 1)); })
 		    .y(function(d) { return y( d.value ); });
 
-		// format the data
-		/*
-		assets.forEach(function(d) {
-			d.year = window.parseDate(d.year);
-			console.log(d.year);
-			d.value = +d.value;
-		});
-		*/
-
 		// Scale the range of the data
 		//d3.extent(assets, function(d) { return d.year; })
 		x.domain([minDate, maxDate]);
@@ -160,16 +167,13 @@ module.exports = function(){
 		// Add the Y Axis
 		svg.append("g")
 		  .attr("transform", "translate(" + margin.left + ",0)")
-		  .call(customYAxis);
-
-		
+		  .call(customYAxis);	
 
 		// Add the valueline path.
 		svg.append("path")
 		  .data([assets])
 		  .attr("class", "asset-line")
 		  .attr("d", assetsLine);
-
 		
 		svg.selectAll("circle")
 			.data(assets)
@@ -219,7 +223,7 @@ module.exports = function(){
 				clearTimeout(infoTimeout);
 			});
 
-		if(affiliations.length <= 1){
+		if(affiliations.length < 1){
 			return;
 		}
 
@@ -304,15 +308,20 @@ module.exports = function(){
 	  g.selectAll(".tick line").attr("dy", -svgHeight);
 	  g.selectAll(".tick text").attr("dy", -svgHeight + margin.top + 5 );
 	  g.selectAll(".tick").each(function(d,i){
-	  	if(	d.getFullYear() == "1982" || d.getFullYear() == "1986" ||
-	  	d.getFullYear() == "1990" || d.getFullYear() == "1994" ||
-	  	d.getFullYear() == "1998" || d.getFullYear() == "2002" || 
-	  			d.getFullYear() == "2006" || d.getFullYear() == "2010" || 
-	  			d.getFullYear() == "2014" || d.getFullYear() == "2018"){
+	  	if(maxDate.getFullYear() - minDate.getFullYear() <= 5){
+	  		d3.select(this).classed("opaque", false);
+	  		return;
+	  	}
+
+	  	let yearFrom1962 = d.getFullYear() - 1962;
+	  	let divBy4 = (yearFrom1962/4).toString();
+
+	  	if(	divBy4.indexOf(".") == -1 ){
 	  		d3.select(this).classed("opaque", false);
 	  	}else{
 	  		d3.select(this).classed("opaque", true);
 	  	}
+
 	  });
 	}
 
@@ -329,21 +338,24 @@ module.exports = function(){
 
 		if(chartData){
 			assetData = chartData.asset_history;
-		} 
+		}
 
 		if(colWidth > breakPoint){
-			colHeight = colWidth*0.4;//Math.round(colWidth*0.4);
-			margin = {top: 30, right: 0, bottom: 60, left: 70};
 
 			if(!assetData || assetData.length < 1){
+				colHeight = 150;
+				margin = {top: 30, right: 20, bottom: 60, left: 20};
+			}else{
 				colHeight = 320;
+				margin = {top: 30, right: 0, bottom: 60, left: 70};
 			}
 		}else{
-			colHeight = colWidth*0.6;
-			margin = {top: 30, right: 0, bottom: 60, left: 40};
-
 			if(!assetData || assetData.length < 1){
+				colHeight = 100;
+				margin = {top: 30, right: 20, bottom: 60, left: 20};
+			}else{
 				colHeight = 320;
+				margin = {top: 30, right: 0, bottom: 60, left: 40};
 			}
 		}
 
