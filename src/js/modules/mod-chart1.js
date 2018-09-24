@@ -11,7 +11,6 @@ module.exports = function(){
 	let max, maxDate, minDate;
 	let chartData, cData;
 	let infoTimeout, msgTimeout;
-	let baseURL = "https://api-perfilpolitico.serenata.ai/api/";
 	let ageURL;
 	let currPost;
 
@@ -38,7 +37,14 @@ module.exports = function(){
 		calcColumnValues();
 
 		d3.select("#chart1-title")
-			.html("Comparação com os eleitos em 2014");
+			.html(function(){
+				let filters = window.currentFilters;
+				if(filters.cargo == "deputado-estadual"){
+					return "Comparação com os eleitos em 2014 "+filters.estado_prep+" "+filters.estado;
+				}else{
+					return "Comparação com os eleitos em 2014";
+				}
+			});
 
 		chartBuild = [
 			buildAgeChart,
@@ -53,12 +59,6 @@ module.exports = function(){
 				[chartBuild[i](chartData[i], cData[props[i]], i)];
 			}
 		}
-/*
-		if(!currPost || window.currentFilters.cargo != currPost){
-			currPost = window.currentFilters.cargo;
-			ageURL = baseURL + "stats/2014/"+currPost+"/age/";
-
-		}*/
 		//buildAgeChart(chartData.age);
 	}
 
@@ -75,7 +75,7 @@ module.exports = function(){
 			margin = {top: 0, right: 0, bottom: 0, left: 0};
 		}else{
 			colWidth = 460;
-			colHeight = 230;
+			colHeight = 200;
 			margin = {top: 0, right: 0, bottom: 0, left: 0};
 		}
 
@@ -91,7 +91,7 @@ module.exports = function(){
 		let rangesPt = ["até 24", "de 25 a 34", "de 35 a 44", "de 45 a 59", "de 60 a 69", "70 ou mais"];
 
 		let candidateRange=-1;
-		let maxValue = 0;
+		let maxValue = 0, allTotals = 0;
 
 		calcColumnValues();
 
@@ -117,6 +117,9 @@ module.exports = function(){
 		maxValue = d3.max(ageData, function(d,i){
 			return d.total;
 		});
+		allTotals = d3.sum(ageData, function(d,i){
+			return d.total;
+		});
 
 		svg[index].selectAll("rect")
 			.data(ageData)
@@ -137,7 +140,7 @@ module.exports = function(){
 			.attr("height", (colHeight/ageData.length)-4)
 			.attr("width", function(d,i){
 				let fullWidth = colWidth - 120;
-				return Math.round(fullWidth*(d.total/maxValue));
+				return Math.round(fullWidth*(d.total/allTotals));
 			});
 
 		svg[index].selectAll(".bar-line")
@@ -155,7 +158,7 @@ module.exports = function(){
 			})
 			.attr("x1", function(d,i){
 				let fullWidth = colWidth - 120;
-				return Math.round(fullWidth*(d.total/maxValue)) + 30;
+				return Math.round(fullWidth*(d.total/allTotals)) + 30;
 			})
 			.attr("x2", function(d,i){
 				let fullWidth = colWidth - 70;
@@ -169,7 +172,7 @@ module.exports = function(){
 			.attr("class", "bar-number")
 			.attr("dx", function(d,i){
 				let fullWidth = colWidth - 120;
-				return Math.round(fullWidth*(d.total/maxValue)) + 5 ;
+				return Math.round(fullWidth*(d.total/allTotals)) + 5 ;
 			})
 			.attr("dy", function(d,i){
 				let height = (colHeight/ageData.length);
@@ -199,7 +202,7 @@ module.exports = function(){
 
 	let buildEducationChart = function(edData, ed, index){
 		let candidateRange=-1;
-		let maxValue = 0;
+		let maxValue = 0, allTotals = 0;
 
 		edData.forEach(function(r,i){
 			if(r.characteristic.toLowerCase() == ed.toLowerCase()){
@@ -225,6 +228,9 @@ module.exports = function(){
 		maxValue = d3.max(edData, function(d,i){
 			return d.total;
 		});
+		allTotals = d3.sum(edData, function(d,i){
+			return d.total;
+		});
 
 		svg[index].selectAll("rect")
 			.data(edData)
@@ -245,29 +251,7 @@ module.exports = function(){
 			.attr("height", (colHeight/edData.length)-4)
 			.attr("width", function(d,i){
 				let fullWidth = colWidth - 190;
-				return Math.round(fullWidth*(d.total/maxValue));
-			});
-
-		svg[index].selectAll(".bar-line")
-			.data(edData)
-			.enter()
-			.append("line")
-			.attr("class","bar-line")
-			.attr("y1", function(d,i){
-				let height = (colHeight/edData.length);
-				return (height*(i+1)) - (height/2);
-			})
-			.attr("y2", function(d,i){
-				let height = (colHeight/edData.length);
-				return (height*(i+1)) - (height/2);
-			})
-			.attr("x1", function(d,i){
-				let fullWidth = colWidth - 190;
-				return Math.round(fullWidth*(d.total/maxValue)) + 30;
-			})
-			.attr("x2", function(d,i){
-				let fullWidth = colWidth - 140;
-				return fullWidth;
+				return Math.round(fullWidth*(d.total/allTotals));
 			});
 
 		svg[index].selectAll(".bar-number")
@@ -277,7 +261,7 @@ module.exports = function(){
 			.attr("class", "bar-number")
 			.attr("dx", function(d,i){
 				let fullWidth = colWidth - 190;
-				return Math.round(fullWidth*(d.total/maxValue)) + 5 ;
+				return Math.round(fullWidth*(d.total/allTotals)) + 5 ;
 			})
 			.attr("dy", function(d,i){
 				let height = (colHeight/edData.length);
@@ -305,11 +289,37 @@ module.exports = function(){
 				ed = ed.replace("fundamental", "fund.");
 				return  ed;
 			});
+
+		svg[index].selectAll(".bar-line")
+			.data(edData)
+			.enter()
+			.append("line")
+			.attr("class","bar-line")
+			.attr("y1", function(d,i){
+				let height = (colHeight/edData.length);
+				return (height*(i+1)) - (height/2);
+			})
+			.attr("y2", function(d,i){
+				let height = (colHeight/edData.length);
+				return (height*(i+1)) - (height/2);
+			})
+			.attr("x1", function(d,i){
+				let fullWidth = colWidth - 190;
+				return Math.round(fullWidth*(d.total/allTotals)) + 30;
+			})
+			.attr("x2", function(d,i){
+				let label = svg[index].selectAll(".bar-label").filter(function(dd,ii){ 
+					return ii == i;
+				});
+				let w = label.text().length * 6;
+				let fullWidth = colWidth - w - 15;
+				return fullWidth;
+			});
 	}
 
 	let buildGenderChart = function(gData, property, index){
 		let candidateRange=-1;
-		let maxValue = 0;
+		let maxValue = 0, allTotals = 0;
 
 		gData.forEach(function(r,i){
 			if(r.characteristic.toLowerCase() == property.toLowerCase()){
@@ -337,6 +347,9 @@ module.exports = function(){
 		maxValue = d3.max(gData, function(d,i){
 			return d.total;
 		});
+		allTotals = d3.sum(gData, function(d,i){
+			return d.total;
+		});
 
 		svg[index].selectAll("rect")
 			.data(gData)
@@ -357,7 +370,7 @@ module.exports = function(){
 			.attr("height", (colHeight/gData.length)-4)
 			.attr("width", function(d,i){
 				let fullWidth = colWidth - 120;
-				return Math.round(fullWidth*(d.total/maxValue));
+				return Math.round(fullWidth*(d.total/allTotals));
 			});
 
 		svg[index].selectAll(".bar-line")
@@ -375,7 +388,7 @@ module.exports = function(){
 			})
 			.attr("x1", function(d,i){
 				let fullWidth = colWidth - 120;
-				return Math.round(fullWidth*(d.total/maxValue)) + 30;
+				return Math.round(fullWidth*(d.total/allTotals)) + 30;
 			})
 			.attr("x2", function(d,i){
 				let fullWidth = colWidth - 70;
@@ -389,7 +402,7 @@ module.exports = function(){
 			.attr("class", "bar-number")
 			.attr("dx", function(d,i){
 				let fullWidth = colWidth - 120;
-				return Math.round(fullWidth*(d.total/maxValue)) + 5 ;
+				return Math.round(fullWidth*(d.total/allTotals)) + 5 ;
 			})
 			.attr("dy", function(d,i){
 				let height = (colHeight/gData.length);
@@ -420,7 +433,7 @@ module.exports = function(){
 
 	let buildRaceChart = function(ethData, property, index){
 		let candidateRange=-1;
-		let maxValue = 0;
+		let maxValue = 0, allTotals = 0;
 
 
 		ethData.forEach(function(r,i){
@@ -449,6 +462,9 @@ module.exports = function(){
 		maxValue = d3.max(ethData, function(d,i){
 			return d.total;
 		});
+		allTotals = d3.sum(ethData, function(d,i){
+			return d.total;
+		});
 
 		svg[index].selectAll("rect")
 			.data(ethData)
@@ -469,7 +485,7 @@ module.exports = function(){
 			.attr("height", (colHeight/ethData.length)-4)
 			.attr("width", function(d,i){
 				let fullWidth = colWidth - 120;
-				return Math.round(fullWidth*(d.total/maxValue));
+				return Math.round(fullWidth*(d.total/allTotals));
 			});
 
 		svg[index].selectAll(".bar-line")
@@ -487,7 +503,7 @@ module.exports = function(){
 			})
 			.attr("x1", function(d,i){
 				let fullWidth = colWidth - 120;
-				return Math.round(fullWidth*(d.total/maxValue)) + 30;
+				return Math.round(fullWidth*(d.total/allTotals)) + 30;
 			})
 			.attr("x2", function(d,i){
 				let fullWidth = colWidth - 70;
@@ -501,7 +517,7 @@ module.exports = function(){
 			.attr("class", "bar-number")
 			.attr("dx", function(d,i){
 				let fullWidth = colWidth - 120;
-				return Math.round(fullWidth*(d.total/maxValue)) + 5 ;
+				return Math.round(fullWidth*(d.total/allTotals)) + 5 ;
 			})
 			.attr("dy", function(d,i){
 				let height = (colHeight/ethData.length);

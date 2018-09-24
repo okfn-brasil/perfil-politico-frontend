@@ -498,13 +498,14 @@ p{
       font: 1.8rem $font-default;
       width: calc( 100% - 160px - #{$inter-column}); 
       margin: 2.8rem 0 0 0;
-    }
-    @media (max-width: 768px){
       span{
         width: 100%;
         clear: both;
         display: block;
       }
+    }
+    @media (max-width: 768px){
+      
       button{
         font-size: 1.4rem;
       }
@@ -529,7 +530,7 @@ p{
 
   #basic-info{
     width: calc( (( (100% - (#{$inter-column})*5) / 6 ) * 2 ) + (#{$inter-column}*1) );
-    margin: 2.8rem $inter-column 0 0;
+    margin: 1.4rem $inter-column 0 0;
     overflow: hidden;
     font-size: 1.4rem;
 
@@ -583,7 +584,7 @@ p{
 }
 
 #chart1{
-  height: 250px;
+  height: 280px;
   width: calc( ( 100% - #{$inter-column}) / 2 );
   margin: 2.8rem 0 0 0;
   padding: 0;
@@ -594,7 +595,7 @@ p{
   .chart1-container{
     width: 100%;
     max-width: 100%;
-    height: 100%;
+    height: 240px;
     display: block;
     position: relative;
   }
@@ -622,7 +623,7 @@ p{
     .bar-number, .bar-label {
       fill: $primary-color;
       color: $primary-color;
-      font: 1rem $font-default;
+      font: 1.2rem $font-default;
     }
 
     &.active{
@@ -636,7 +637,7 @@ p{
     float: none;
     clear: both;
     display: block;
-    height: 250px;
+    height: 280px;
     margin-top: 1.4rem;
   }
 }
@@ -648,7 +649,7 @@ p{
 }
 
 #chart1-title{
-  margin: 0.5rem 0 3.2rem 0;
+  margin: 1.4rem 0 2.8rem 0;
   font-weight: 700;
   padding-left: 2px;
 
@@ -663,8 +664,8 @@ p{
 
 #chart2{
   width: 100%; 
-  height: 360px;
-  margin: 2.8rem 0 0 0; 
+  height: auto;
+  margin: 2rem 0 0 0; 
   /* border: 1px solid $bg-light; */
   padding: 0; 
   display: block;
@@ -678,7 +679,7 @@ p{
     float: none;
     overflow: visible;
     position: relative;
-    margin-top: 2rem;
+    margin-top: 0rem;
 
     .affil-text{
       font-size: 1rem;
@@ -698,6 +699,12 @@ p{
 }
 
 #chart2-title{
+  &.hidden{
+    display: none;
+  }
+}
+
+h4{
   width: 100%;
   clear: both;
   float: none;
@@ -705,6 +712,7 @@ p{
   font: 2.5rem $font-default;
   color: $secondary-color;
   line-height: 1.5;
+  margin-bottom: 2.4rem;
 
   &.hidden{
     display: none;
@@ -752,6 +760,64 @@ h3{
   color: $alt-color;
   display: block;
   padding: 6.4rem 0 4.2rem 0;
+}
+
+#election-history{
+  display: flex;
+  flex-wrap: wrap; 
+  flex-direction: row;
+
+  @media (max-width: 580px){
+      display: block;
+      font-size: 0;
+  }
+
+  button{
+    flex: 1;
+    background: $chart-color;
+    border: 1px solid $white;
+    margin-left: -1px;
+    opacity: 1;
+    color: $white;
+    font-weight: 700;
+    font-size: 1.5rem;
+    padding: 0.4rem 0.2rem;
+
+    &:focus{
+      box-shadow: none;
+      outline: none !important;
+      border-radius: 0;
+    }
+
+    &.enabled{
+      background: $secondary-color;
+      opacity: 0.55;
+      cursor: pointer;
+
+      &.selected{
+        opacity: 1;
+      }
+
+      &:hover{
+        opacity: 0.75;
+      }
+
+    }
+
+    @media (max-width: 960px){
+      width:12.5%;
+      font-size: 1.3rem;
+    }
+
+    @media (max-width: 580px){
+      width:12.5%;
+      flex: 0;
+    }
+  }
+}
+
+#election-text{
+  margin: 2rem 0 4rem 0;
 }
 
 #bottom-bar{
@@ -953,6 +1019,10 @@ h3{
 }
 
 .chart2-svg{
+  text{
+    font-size: 1.3rem;
+    font-family: Helvetica, Arial, sans-serif;
+  }
   .asset-line{
     stroke: $secondary-color;
     stroke-width: 3;
@@ -960,6 +1030,10 @@ h3{
   }
   .asset-point{
     fill: $secondary-color;
+  }
+  .elect-sq{
+    fill: $alt-color;
+    stroke: $bg-light;
   }
 
   .tick {
@@ -998,6 +1072,13 @@ h3{
   .grid path {
     stroke-width: 0;
   }
+
+  .elect-point{
+    fill: $alt-color;
+    stroke: $bg-light;
+  }
+
+
 }
 
 #info-box{
