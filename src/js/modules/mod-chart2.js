@@ -23,7 +23,7 @@ module.exports = function(){
 	
 
 	window.buildChart2 = function(data){
-		let affiliations, assets, earliestYear;
+		let affiliations, assets, elections, elections_won, earliestYear;
 
 		d3.selectAll("#chart2 svg").remove();
 		d3.select("#chart2").classed("hidden", true);
@@ -34,6 +34,7 @@ module.exports = function(){
 			chartData = data;
 			affiliations = chartData.affiliation_history;
 			assets = chartData.asset_history;
+			elections = chartData.election_history;
 		}
 
 		if( !chartData || 
@@ -67,7 +68,7 @@ module.exports = function(){
 			.attr("class", "chart2-svg")
 			.attr("viewBox", "0 0 " +colWidth+ " " + colHeight)
 			.attr("width", colWidth)
-			.attr("height", colHeight);
+			.attr("height", colHeight + 60);
 
 		max = d3.max(assets, function(d) { return +d.value;} );
 
@@ -116,8 +117,7 @@ module.exports = function(){
 
 		xAxis = d3.axisBottom(x)
 			.tickFormat(d3.timeFormat("%Y"))
-			.ticks(4)
-			.tickSize(-(svgHeight - margin.bottom))
+			.tickSize(-svgHeight + margin.bottom - margin.top)
     		.ticks(d3.timeYear);
 
 		yAxis = d3.axisRight(y)
@@ -133,6 +133,10 @@ module.exports = function(){
 		      }else{
 		      	s = d / 1000000;
 		      	text = " milhões"
+		      }
+
+		      if(s.toString().length > 4){
+		      	s = formatNumber(s);
 		      }
 		      
 		      //console.log(1e6);
@@ -161,7 +165,7 @@ module.exports = function(){
 
 		// Add the X Axis
 		svg.append("g")
-		  .attr("transform", "translate(0," + (svgHeight - margin.top )  + ")")
+		  .attr("transform", "translate(0," + (svgHeight - margin.top - 10 )  + ")")
 		  .call(customXAxis);
 
 		// Add the Y Axis
@@ -209,13 +213,6 @@ module.exports = function(){
 				let height = d3.select("#info-box").node().offsetHeight;
 				let width = d3.select("#info-box").node().offsetWidth;
 
-				/*if(coordinates[0] > colWidth - width){
-					coordinates[0] -= width;
-				}
-
-				if(colWidth < 480){
-					coordinates[0] = colWidth/2 - (width/2) + 20;
-				}*/
 				if(coordinates[0] < 0){
 					coordinates[0] = 0;
 				}else if(coordinates[0] > colWidth - width){
@@ -228,6 +225,102 @@ module.exports = function(){
 				clearTimeout(infoTimeout);
 			});
 
+		elections_won = elections.filter(function(d,i){
+			return d.elected;
+		})
+		let election_points = svg.selectAll(".elect-point")
+		  .data(elections_won)
+		  .enter()
+		  .append("rect")
+		  .attr("class", "elect-point")
+		  .attr("width", function(d,i){
+		  	let start = x(new Date(d.year+1, 0, 1));
+		  	let end;
+		  	if(d.post == "SENADOR"){
+		  		end = x(new Date(d.year+8, 11, 30))
+		  		return end - start;
+		  	}else{
+		  		end = x(new Date(d.year+4, 11, 30))
+		  		return end - start;
+		  	}
+		  })
+		  .attr("height", 12)
+		  .attr("x", function(d, i){
+		  	return x(new Date(d.year+1, 0, 1));
+		  })
+		  .attr("y", svgHeight - margin.bottom + 30)
+			.on("mouseover click", function(d){
+				if(d.post == "SENADOR"){
+			  		d3.select("#info-box").html((d.year+1) + "-" + (d.year+7));
+			  	}else{
+			  		d3.select("#info-box").html((d.year+1) + "-" + (d.year+4));
+			  	}
+				
+				d3.select("#info-box").classed("hidden", false);
+				d3.select("#info-box").classed("smaller", true);
+				
+				clearTimeout(infoTimeout);
+			})
+			.on("mouseout", function(d){
+				clearTimeout(infoTimeout);
+				infoTimeout = setTimeout(function(){
+					d3.select("#info-box").classed("hidden", true);
+				d3.select("#info-box").classed("smaller", false);
+				}, 500);
+			})
+			.on("mousemove", function(d){
+				let coordinates = d3.mouse(d3.select('body').node());
+				let height = d3.select("#info-box").node().offsetHeight;
+				let width = d3.select("#info-box").node().offsetWidth;
+
+				if(coordinates[0] < 0){
+					coordinates[0] = 0;
+				}else if(coordinates[0] > colWidth - width){
+					coordinates[0] = colWidth - width;
+				}
+				d3.select("#info-box")
+					.attr("style", "margin-left: " +(coordinates[0])+ "px; margin-top: "+(coordinates[1] - height - 15)+"px");
+				
+				clearTimeout(infoTimeout);
+			})
+
+		d3.selectAll(".history-year").classed("selected, enabled",false);
+
+		elections.forEach(function(obj, i){
+			let year = obj.year;
+			let text = "";
+
+			let button = d3.select(".history-year.y"+year);
+			//button.attr("data-elected", obj.elected);
+			//button.attr("data-post", obj.post);
+			//button.attr("data-desc", obj.result);
+			text += "<b>"+year+":</b> Candidatou-se ao cargo de <b>";
+			text += window.capitalizeName(obj.post);
+			text += "</b> ("+window.capitalizeName(obj.result) + ")";
+
+			button.on("click", function(d,i){
+				d3.select("#election-text").html(text);
+				d3.selectAll(".history-year").classed("selected",false);
+				
+				button.classed("selected", true);
+			});
+			button.classed("enabled", true);
+		});
+
+		let button = d3.select(".history-year.y2018");
+		console.log(button.node());
+		button.on("click", function(d,i){
+			d3.select("#election-text").html("<b>2018:</b> Candidatou-se ao cargo de <b>" + window.capitalizeName(window.currentFilters.cargo.replace("-", " ")) + "</b>");
+			d3.selectAll(".history-year").classed("selected",false);
+			
+			button.classed("selected", true);
+		});
+		button.classed("enabled", true);
+
+		let e = document.createEvent('UIEvents');
+		e.initUIEvent('click', true, true, window, 1);
+		button.node().dispatchEvent(e);
+
 		if(affiliations.length < 1){
 			return;
 		}
@@ -237,12 +330,12 @@ module.exports = function(){
 		  .enter()
 		  .append("rect")
 		  .attr("class", "affil-point")
-		  .attr("width", 12)
-		  .attr("height", 12)
+		  .attr("width", 10)
+		  .attr("height", 10)
 		  .attr("x", function(d, i){
-		  	return x(window.parseDate(d.started_in)) - 6;
+		  	return x(window.parseDate(d.started_in)) - 5;
 		  })
-		  .attr("y", svgHeight - margin.bottom + 30)
+		  .attr("y", svgHeight - margin.bottom + 32)
 		  .on("click", function(d, i){
 		  	console.log(d.started_in);
 		  	console.log(x(window.parseDate(d.started_in)));
@@ -290,17 +383,54 @@ module.exports = function(){
 		  .attr("x", function(d, i){
 		  	return x(window.parseDate(d.started_in));
 		  })
-		  .attr("y", svgHeight )
+		  .attr("dy", svgHeight - 25 )
 		  .text(function(d, i){
 		  	return d.party;
 		  });
 
-		/*affil_texts.select('text')
-			.attr('x', function(d, i){
-				let w = d3.select(this).node().getBoundingClientRect().width;
-				
-				return x(window.parseDate(d.started_in));// - (w/2);
-			});*/
+		svg.append("rect")
+			.attr("class", "affil-sq")
+			.attr("y", svgHeight - 10)
+			.attr("x", colWidth - 10)
+			.attr("width", 10)
+			.attr("height", 10)
+
+		svg.append("text")
+			.attr("class", "affil-leg")
+			.attr("y", colHeight)
+			.attr("x", colWidth - 20)
+			.attr("text-anchor", "end")
+			.text("filiação a partido")
+
+		svg.append("rect")
+			.attr("class", "elect-sq")
+			.attr("y", colHeight + 7)
+			.attr("x", colWidth - 10)
+			.attr("width", 10)
+			.attr("height", 10)
+
+		svg.append("text")
+			.attr("class", "elect-leg")
+			.attr("y", colHeight + 17)
+			.attr("x", colWidth - 20)
+			.attr("text-anchor", "end")
+			.text("exerceu cargo eletivo")
+
+		svg.append("circle")
+			.attr("class", "asset-point")
+			.attr("cy", colHeight + 30)
+			.attr("cx", colWidth - 5)
+			.attr("r", 5)
+
+		svg.append("text")
+			.attr("class", "asset-leg")
+			.attr("y", colHeight + 35)
+			.attr("x", colWidth - 20)
+			.attr("text-anchor", "end")
+			.text("patrimônio declarado")
+
+
+		
 	}
 
 	let formatDate = function(value){
@@ -315,8 +445,7 @@ module.exports = function(){
 	let customXAxis = function(g) {
 	  g.call(xAxis);
 	  g.select(".domain").remove();
-	  g.selectAll(".tick line").attr("dy", -svgHeight);
-	  g.selectAll(".tick text").attr("dy", -svgHeight + margin.top + 5 );
+	  g.selectAll(".tick text").attr("dy", -svgHeight + margin.top);
 	  g.selectAll(".tick").each(function(d,i){
 	  	if(maxDate.getFullYear() - minDate.getFullYear() <= 5){
 	  		d3.select(this).classed("opaque", false);
@@ -353,19 +482,19 @@ module.exports = function(){
 		if(colWidth > breakPoint){
 
 			if(!assetData || assetData.length < 1){
-				colHeight = 150;
-				margin = {top: 30, right: 20, bottom: 60, left: 20};
+				colHeight = 160;
+				margin = {top: 30, right: 20, bottom: 80, left: 20};
 			}else{
-				colHeight = 320;
-				margin = {top: 30, right: 0, bottom: 60, left: 70};
+				colHeight = 340;
+				margin = {top: 30, right: 0, bottom: 80, left: 70};
 			}
 		}else{
 			if(!assetData || assetData.length < 1){
-				colHeight = 100;
-				margin = {top: 30, right: 20, bottom: 60, left: 20};
+				colHeight = 120;
+				margin = {top: 30, right: 20, bottom: 80, left: 20};
 			}else{
-				colHeight = 320;
-				margin = {top: 30, right: 0, bottom: 60, left: 40};
+				colHeight = 340;
+				margin = {top: 30, right: 0, bottom: 80, left: 40};
 			}
 		}
 

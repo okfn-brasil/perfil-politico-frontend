@@ -11,7 +11,7 @@ module.exports = function(){
 	let scrollTimeout;
 	let infoTimeout, msgTimeout;
 	let currGender;
-	let staticURL;
+	let staticURL,staticURLState;
 	let staticData = [];
 	let clickedBlock = null;
 	let clickedCandidate = -1;
@@ -30,7 +30,7 @@ module.exports = function(){
 		    var opts = document.getElementById('candidate-list').childNodes;
 		    var id;
 
-		    
+		    clickedCandidate = 0;
 		    for (var i = 0; i < opts.length; i++) {
 		    	//
 			    if (opts[i] != "#text" && opts[i].value != undefined){
@@ -38,6 +38,14 @@ module.exports = function(){
 
 			      if (optVal === val) {
 			      	id = d3.select(opts[i]).attr("data-id");
+			      	clickedBlock = blockData[0];
+
+			      	blocks[0].selectAll(".c").each(function(d,i){
+			      		if(d.name + " - " + d.party == opts[i].value){
+			      			clickedCandidate = i;
+			      		}
+			      	});
+
 			        loadCandidateData(id);
 			        break;
 			      }
@@ -58,7 +66,7 @@ module.exports = function(){
 		d3.select(window).on('resize', window.resize);
 
 		d3.select("body").on("click",function(){
-			var tooltippedContent = d3.selectAll(".c, .asset-point, .affil-point");
+			var tooltippedContent = d3.selectAll(".c, .asset-point, .affil-point, .elect-point");
 		    var outside = tooltippedContent.filter(equalToEventTarget).empty();
 		    if (outside) {
 		        d3.select("#info-box").classed("hidden", true);
@@ -154,6 +162,13 @@ module.exports = function(){
       "https://api-perfilpolitico.serenata.ai/api/stats/2014/" + filters.cargo + "/ethnicity/"
 		];
 
+		staticURLState = [
+      "https://api-perfilpolitico.serenata.ai/api/stats/"+filters.estado+"/2014/" + filters.cargo + "/age/",
+      "https://api-perfilpolitico.serenata.ai/api/stats/"+filters.estado+"/2014/" + filters.cargo + "/education/",
+      "https://api-perfilpolitico.serenata.ai/api/stats/"+filters.estado+"/2014/" + filters.cargo + "/gender/",
+      "https://api-perfilpolitico.serenata.ai/api/stats/"+filters.estado+"/2014/" + filters.cargo + "/ethnicity/"
+		];
+
 		if(window.currentFilters.cargo != "presidente"){
 			for(var i=0; i<staticURL.length; i++){
 				loadStaticData(i);
@@ -164,8 +179,11 @@ module.exports = function(){
 
 	let loadStaticData = function(i){
 		let dataPoint = staticData[i];
-		d3.json(staticURL[i], function(error, data){
-
+		let url = staticURL[i];
+		if(window.currentFilters.cargo == "deputado-estadual"){
+			url = staticURLState[i];
+		}
+		d3.json(url, function(error, data){
 			staticData[i] = data;
 		})
 	}
@@ -180,7 +198,6 @@ module.exports = function(){
 		let prevCandidates, removed, prevBlock, temp, pBox, newBlockY;
 
 		window.contextFilters.push(filterType);
-		//console.log(blockData);
 
 
 		if(blockData.length == 0){
@@ -503,7 +520,7 @@ module.exports = function(){
 			})
 			.on("mouseover", function(d){
 
-				d3.select("#info-box").html(capitalizeName(d.name) + " ("+d.party+")");
+				d3.select("#info-box").html(window.capitalizeName(d.name) + " ("+d.party+")");
 				d3.select("#info-box").classed("hidden", false);
 				
 				clearTimeout(infoTimeout);
@@ -673,7 +690,7 @@ module.exports = function(){
 			.on("click", function(d, i){
 				let index = d3.select(this).attr("data-index");
 				selectedParty = d.key;
-				
+
 				for(let j=0; j<blocks.length; j++){
 					blocks[j].selectAll(".c")
 					.each(function(dd,ii){
@@ -910,7 +927,7 @@ module.exports = function(){
     		.attr("src", cData.image);
 
     	d3.select("#profile-name span")
-    		.text(capitalizeName(cData.ballot_name));
+    		.text(window.capitalizeName(cData.ballot_name));
 
     	d3.select("#info-partido")
     		.text(correctParty(cData.party_abbreviation));
@@ -1135,7 +1152,7 @@ const exceptions = [
   "Von",
   "E"
 ];
-const capitalizeName = function(name) {
+window.capitalizeName = function(name) {
   let lastCharWasNotALetter = true;
   return name
       .toLowerCase()
