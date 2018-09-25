@@ -684,6 +684,10 @@ p{
     .affil-text{
       font-size: 1rem;
     }
+
+    .affil-bg{
+      fill: $white;
+    }
   }
   @media (max-width: 580px){
     width: 100%;

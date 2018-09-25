@@ -18,6 +18,18 @@ module.exports = function(){
 		d3.select("#chart2").classed("hidden", true);
 		d3.select("#chart2-title").classed("hidden", true);
 		d3.select("#chart2-title").html("");
+
+		d3.selectAll(".history-year").on("click",function(d,i){
+			if(d3.select(this).classed("enabled")==false){
+				return false;
+			}
+
+			let text = d3.select(this).attr("data-text");
+			d3.select("#election-text").html(text);
+			d3.selectAll(".history-year").classed("selected",false);
+			
+			d3.select(this).classed("selected", true);
+		});
 		window.resizeChart2();
 	}
 	
@@ -305,12 +317,7 @@ module.exports = function(){
 			text += window.capitalizeName(obj.post);
 			text += "</b> ("+window.capitalizeName(obj.result) + ")";
 
-			button.on("click", function(d,i){
-				d3.select("#election-text").html(text);
-				d3.selectAll(".history-year").classed("selected",false);
-				
-				button.classed("selected", true);
-			});
+			button.attr("data-text", text);
 			button.classed("enabled", true);
 		});
 
@@ -331,6 +338,18 @@ module.exports = function(){
 			return;
 		}
 
+		let affil_bg = svg.selectAll(".affil-bg")
+		  .data(affiliations)
+		  .enter()
+		  .append("rect")
+		  .attr("class", "affil-bg")
+		  .attr("width", 30)
+		  .attr("height", 15)
+		  .attr("x", function(d, i){
+		  	return x(window.parseDate(d.started_in)) - 5;
+		  })
+		  .attr("y", svgHeight - margin.bottom + 42);
+
 		let affiliation_points = svg.selectAll(".affil-point")
 		  .data(affiliations)
 		  .enter()
@@ -342,10 +361,6 @@ module.exports = function(){
 		  	return x(window.parseDate(d.started_in)) - 5;
 		  })
 		  .attr("y", svgHeight - margin.bottom + 32)
-		  .on("click", function(d, i){
-		  	console.log(d.started_in);
-		  	console.log(x(window.parseDate(d.started_in)));
-		  })
 			.on("mouseover click", function(d){
 				d3.select("#info-box").html(formatDate(d.started_in));
 				d3.select("#info-box").classed("hidden", false);
@@ -380,6 +395,8 @@ module.exports = function(){
 		  .attr("y", function(d, i){
 		  	return svgHeight + 5;
 		  });*/
+
+		
 
 		let affil_texts = svg.selectAll(".affil-text")
 		  .data(affiliations)
@@ -435,9 +452,6 @@ module.exports = function(){
 			.attr("x", colWidth - 20)
 			.attr("text-anchor", "end")
 			.text("patrimônio declarado")
-
-
-		
 	}
 
 	let formatDate = function(value){

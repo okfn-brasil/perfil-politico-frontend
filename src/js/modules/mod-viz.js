@@ -58,7 +58,6 @@ module.exports = function(){
 
 		let questions = document.querySelector("#filtro-perguntas");
 		questions.addEventListener("change", function(event){
-			//console.log(blockData);
 			let selected = questions.value.toLowerCase();
 			
 			addBlock(selected);
@@ -344,7 +343,6 @@ module.exports = function(){
 		});
 
 		if(blockData.length == 1){
-			console.log(d3.selectAll("#candidate-list option").size());
 			d3.selectAll("#candidate-list option").remove();
 			sortedByName.forEach(function(obj, i){
 				let party = obj.party;
@@ -1122,7 +1120,6 @@ module.exports = function(){
 		let e = document.createEvent('UIEvents');
 		e.initUIEvent(evt, true, true, window, 1);
 
-		console.log();
 		target.node(target).dispatchEvent(e);
 	}
 
