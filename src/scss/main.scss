@@ -805,12 +805,12 @@ h3{
     }
 
     @media (max-width: 960px){
-      width:12.5%;
+      width:20%;
       font-size: 1.3rem;
     }
 
     @media (max-width: 580px){
-      width:12.5%;
+      width:20%;
       flex: 0;
     }
   }
@@ -998,6 +998,9 @@ h3{
 
     &.highlighted{
       fill: $secondary-color;
+    }
+    &:hover{
+      opacity: 0.7;
     }
   }
 

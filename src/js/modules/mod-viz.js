@@ -16,6 +16,9 @@ module.exports = function(){
 	let clickedBlock = null;
 	let clickedCandidate = -1;
 	let selectedChart = "age";
+	let firstLoad = true;
+	window.partyTimeout;
+	let selectedBar = 0;
 	window.parseDate = d3.timeParse("%Y-%m-%d");
 
 	let setup = function(){
@@ -340,20 +343,24 @@ module.exports = function(){
 		   return d3.ascending(a.name, b.name);
 		});
 
-		sortedByName.forEach(function(obj, i){
-			let party = obj.party;
-			let value = obj.name + " - " + party;
-			let nameList = d3.select("#candidate-list");
-			let occurrences = nameList.selectAll("option[value='"+value+"']")
-			
-			//console.log(value);
-			if(occurrences.size() < 1){
-				d3.select("#candidate-list")
-					.append("option")
-					.attr("value", value)
-					.attr("data-id", obj.id)
-			}
-		});
+		if(blockData.length == 1){
+			console.log(d3.selectAll("#candidate-list option").size());
+			d3.selectAll("#candidate-list option").remove();
+			sortedByName.forEach(function(obj, i){
+				let party = obj.party;
+				let value = obj.name + " - " + party;
+				let nameList = d3.select("#candidate-list");
+				let occurrences = nameList.selectAll("option[value='"+value+"']")
+				
+				//console.log(value);
+				if(occurrences.size() < 1){
+					d3.select("#candidate-list")
+						.append("option")
+						.attr("value", value)
+						.attr("data-id", obj.id)
+				}
+			});
+		}
 
 		blockData[blockData.length-1] = filteredData.sort(function(a, b){
 		   return d3.ascending(a.party, b.party);
@@ -691,6 +698,8 @@ module.exports = function(){
 				let index = d3.select(this).attr("data-index");
 				selectedParty = d.key;
 
+				clearTimeout(window.partyTimeout);
+
 				for(let j=0; j<blocks.length; j++){
 					blocks[j].selectAll(".c")
 					.each(function(dd,ii){
@@ -743,6 +752,8 @@ module.exports = function(){
 				let index = d3.select(this).attr("data-index");
 				selectedParty = d.key;
 
+				clearTimeout(window.partyTimeout);
+
 				for(let j=0; j<blocks.length; j++){
 					blocks[j].selectAll(".c")
 					.each(function(dd,ii){
@@ -781,6 +792,10 @@ module.exports = function(){
 		partyBlock.attr("transform", 
 			"translate("+((bW/2) - (pBlockW/2))+"," + (newBlockY + currBlockH + 110) + ")");
 
+		if(firstLoad){
+			firstLoad = false;
+			animateParties();
+		}
 		
 	}
 
@@ -893,9 +908,7 @@ module.exports = function(){
 	    		// only if not president
 	    		if(window.currentFilters.cargo != "presidente"){
 	    			window.buildChart1(staticData, cData);
-		    		let e = document.createEvent('UIEvents');
-					e.initUIEvent('click', true, true, window, 1);
-		    		d3.select("#basic-info div:nth-child(1)").node().dispatchEvent(e);
+	    			dispatchEvent(d3.select("#basic-info div:nth-child(1)"), "click");
 	    		}else{
 	    			d3.selectAll("#chart1 svg").remove();
 	    			d3.selectAll("#chart2 svg").remove();
@@ -910,10 +923,6 @@ module.exports = function(){
 	    	}
 			
 		});
-	}
-
-	let makePartyChart = function(){
-
 	}
 
 	let fillCandidateInfo = function(cData){
@@ -1105,27 +1114,49 @@ module.exports = function(){
 				phrase = prep[currGender] + ", <b>"+amount+"</b> é de cor branca";
 			}
 		}
-		
 
 		return phrase;
+	}
+
+	let dispatchEvent = function(target, evt){
+		let e = document.createEvent('UIEvents');
+		e.initUIEvent(evt, true, true, window, 1);
+
+		console.log();
+		target.node(target).dispatchEvent(e);
+	}
+
+	let animateParties = function(lastTime){
+		let bars = partyCharts[0].selectAll(".party-bar");
+		let bar = bars.filter(function(d,i){ return i == selectedBar });
+
+
+		selectedParty = bar.datum().key;
+		//console.log(bar.datum().key);
+
+		dispatchEvent(bar, "click");
+
+		if(lastTime){
+			clearTimeout(window.partyTimeout);
+			return;
+		}
+
+		window.partyTimeout = setTimeout(function(){
+			if(selectedBar >= bars.size()-1){
+				selectedBar = 0;
+				animateParties(true);
+			}else{
+				selectedBar += 1;
+				animateParties(false);
+			}
+		},500);
 	}
 
 	setup();
 }
 
-// utilitary functions
-let getElementOffset = function(el) {
-  const rect = el.getBoundingClientRect();
 
-  return rect.top + window.pageYOffset;
-}
-let getElementHeight = function(el) {
-  const rect = el.getBoundingClientRect();
-
-  return rect.height;
-}
-
-let equalToEventTarget = function() {
+let equalToEventTarget = function() { 
     return this == d3.event.target;
 }
 let correctParty = function(party){

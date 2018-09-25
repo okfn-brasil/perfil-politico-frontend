@@ -96,6 +96,8 @@ module.exports = function(filters){
 			}
 		});
 
+		clearTimeout(window.partyTimeout);
+
 		window.currentFilters[filterType] = selected;
 
 		if(window.currentFilters.cargo == "presidente"){

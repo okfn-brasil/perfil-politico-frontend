@@ -106,6 +106,11 @@ module.exports = function(){
 			minDate = new Date(maxDate.getFullYear()-1, 0, 1);
 		}
 
+		if(earliestYear && earliestYear >= maxDate.getFullYear()){
+			minDate = new Date(earliestYear-1, 0, 1);
+			maxDate = new Date(earliestYear, 11, 30);
+		}
+
 		if(earliestYear && earliestYear < minDate.getFullYear()){
 			minDate = new Date(earliestYear, 0, 1);
 		}
@@ -212,11 +217,12 @@ module.exports = function(){
 				let coordinates = d3.mouse(d3.select('body').node());
 				let height = d3.select("#info-box").node().offsetHeight;
 				let width = d3.select("#info-box").node().offsetWidth;
+				let col = d3.select(".column").node().offsetWidth;
 
 				if(coordinates[0] < 0){
 					coordinates[0] = 0;
-				}else if(coordinates[0] > colWidth - width){
-					coordinates[0] = colWidth - width;
+				}else if(coordinates[0] > col - width){
+					coordinates[0] = col - width;
 				}
 
 				d3.select("#info-box")
@@ -272,11 +278,12 @@ module.exports = function(){
 				let coordinates = d3.mouse(d3.select('body').node());
 				let height = d3.select("#info-box").node().offsetHeight;
 				let width = d3.select("#info-box").node().offsetWidth;
+				let col = d3.select(".column").node().offsetWidth;
 
 				if(coordinates[0] < 0){
 					coordinates[0] = 0;
-				}else if(coordinates[0] > colWidth - width){
-					coordinates[0] = colWidth - width;
+				}else if(coordinates[0] > col - width){
+					coordinates[0] = col - width;
 				}
 				d3.select("#info-box")
 					.attr("style", "margin-left: " +(coordinates[0])+ "px; margin-top: "+(coordinates[1] - height - 15)+"px");
@@ -308,7 +315,6 @@ module.exports = function(){
 		});
 
 		let button = d3.select(".history-year.y2018");
-		console.log(button.node());
 		button.on("click", function(d,i){
 			d3.select("#election-text").html("<b>2018:</b> Candidatou-se ao cargo de <b>" + window.capitalizeName(window.currentFilters.cargo.replace("-", " ")) + "</b>");
 			d3.selectAll(".history-year").classed("selected",false);
@@ -358,11 +364,12 @@ module.exports = function(){
 				let coordinates = d3.mouse(d3.select('body').node());
 				let height = d3.select("#info-box").node().offsetHeight;
 				let width = d3.select("#info-box").node().offsetWidth;
+				let col = d3.select(".column").node().offsetWidth;
 
 				if(coordinates[0] < 0){
 					coordinates[0] = 0;
-				}else if(coordinates[0] > colWidth - width){
-					coordinates[0] = colWidth - width;
+				}else if(coordinates[0] > col - width){
+					coordinates[0] = col - width;
 				}
 				d3.select("#info-box")
 					.attr("style", "margin-left: " +(coordinates[0])+ "px; margin-top: "+(coordinates[1] - height - 15)+"px");
