@@ -575,15 +575,15 @@ module.exports = function(){
 						return 300 + (10*random);
 					}
 					
-				})
-				.on("end", function(d,i){
-					if(i == list.length-1){
-						newBlockY = pBox.offsetTop + pBox.offsetHeight;
-						blockWidth = block.node().getBBox().width + dotRadius;
-						block.attr("transform", 
-						"translate("+ (bW - blockWidth)/2 +"," + newBlockY + ")");
-					}
 				});
+		
+		candidates.filter(function(d,i){ return i == candidates.size()-1; })
+		.on("end", function(d,i){
+			newBlockY = pBox.offsetTop + pBox.offsetHeight;
+			blockWidth = block.node().getBBox().width + dotRadius;
+			block.attr("transform", 
+			"translate("+ (bW - blockWidth)/2 +"," + newBlockY + ")");
+		});
 
 		bW = svgWidth;
 		pBox = document.querySelectorAll(".box-content")[index];
@@ -594,7 +594,7 @@ module.exports = function(){
 						"translate("+ (bW - blockWidth)/2 +"," + newBlockY + ")");
 		
 		if(list.length <= 20){
-			let candidateStrokes = block.selectAll("circle");
+			let candidateStrokes;// = block.selectAll("circle");
 			candidateStrokes = block.selectAll(".c-stroke")
 				.data(list)
 				.enter()
@@ -682,7 +682,7 @@ module.exports = function(){
 			})
 			.attr("y", function(d, i){
 				let height = 1 + ((d.value.count/maxPValue)*50);
-				return -height;
+				return -height + 10;
 			})
 			.attr("class", function(d,i){
 				let pClass = "party-bar";
@@ -698,34 +698,7 @@ module.exports = function(){
 
 				clearTimeout(window.partyTimeout);
 
-				for(let j=0; j<blocks.length; j++){
-					blocks[j].selectAll(".c")
-					.each(function(dd,ii){
-						if(dd.party == selectedParty){
-							d3.select(this).classed("selected", true);
-						}else{
-							d3.select(this).classed("selected", false);
-						}
-					});
-					blocks[j].selectAll(".c-stroke")
-					.each(function(dd,ii){
-						if(dd.party == selectedParty){
-							d3.select(this).classed("selected", true);
-						}else{
-							d3.select(this).classed("selected", false);
-						}
-					});
-
-					partyCharts[j].selectAll(".party-bar")
-					.each(function(dd,ii){
-						if(dd.key.toUpperCase() == selectedParty.toUpperCase()){
-							d3.select(this).classed("highlighted", true);
-						}else{
-							d3.select(this).classed("highlighted", false);
-						}
-					});
-				}
-
+				changeParty();
 				return;
 			});
 		partyCharts[index]
@@ -741,7 +714,7 @@ module.exports = function(){
 				if(w > maxPartyW){ w = maxPartyW; }
 				return 2 + (w/2) + (i*w);
 			})
-			.attr("x", -5)
+			.attr("x", -15)
 			.text(function(d,i){
 				return d.key;
 			})
@@ -783,6 +756,10 @@ module.exports = function(){
 				return;
 			});
 
+		partyCharts[index].append("text")
+			.attr("y", -60)
+			.text("Selecione um partido para destacar:");
+
 		bW = svg.attr("width");
 		partyBlock = partyCharts[index];
 		pBlockW= partyBlock.node().getBBox().width;
@@ -821,9 +798,9 @@ module.exports = function(){
 				})
 				.attr("fill-opacity", 0)
 				.attr("stroke-opacity", 0)
-				.duration(700)
+				.duration(400)
 				.delay(function(d,i){
-					return (Math.random()*10)*100
+					return (Math.random()*10)*50
 				})
 				.on("end", function(d, i){
 					d3.select(this).remove();
@@ -834,13 +811,28 @@ module.exports = function(){
 		clearTimeout(scrollTimeout);
 		scrollTimeout = setTimeout(function(){
 			let lastBlock = document.querySelector("#box"+blockData.length);
-			smoothScroll(lastBlock.offsetTop, 10);
-		},800)
+			scrollToElement(lastBlock,1600,700);
+			//document.body.scrollTop = lastBlock.offsetTop; // For Safari
+    		//document.documentElement.scrollTop = lastBlock.offsetTop; // For Chrome, Firefox, IE and Opera
+		},500)
 	}
 
-	let smoothScroll = function(pos, time){
-		/*Time is only for scrolling upwards*/
-		/*pos is the y-position to scroll to (in pixels)*/
+	function scrollToElement(element, duration = 400, delay = 0, easing = 'cubic-in-out', endCallback = () => {}) {
+	  var offsetTop = window.pageYOffset || document.documentElement.scrollTop
+	  
+	  console.log(offsetTop);
+	  d3.transition()
+	    //.each("end", endCallback)
+	    .delay(delay)
+	    .duration(duration)
+	    //.ease(easing)
+	    .tween("scroll", (offset => () => {
+	      var i = d3.interpolateNumber(offsetTop, offset);
+	      return t => scrollTo(0, i(t))
+	    })(offsetTop + element.getBoundingClientRect().top));
+	}
+
+	/*let smoothScroll = function(pos, time){
 		if(isNaN(pos)){
 			throw "Position must be a number";
 		}
@@ -880,7 +872,7 @@ module.exports = function(){
 				}
 			}, time);
 		}
-	}
+	}*/
 
 	let loadCandidateData = function(id) {
 		let infoBlock = d3.select("#full-info-content").node();
@@ -917,7 +909,8 @@ module.exports = function(){
 				window.resizeChart2();
 
 	    		d3.select("#full-info-content").classed("hidden", false);
-    			smoothScroll(infoBlock.offsetTop, 6);
+    			//smoothScroll(infoBlock.offsetTop, 6);
+    			scrollToElement(infoBlock,800,100);
 	    	}
 			
 		});
@@ -1123,6 +1116,36 @@ module.exports = function(){
 		target.node(target).dispatchEvent(e);
 	}
 
+	let changeParty = function(){
+		for(let j=0; j<blocks.length; j++){
+			blocks[j].selectAll(".c")
+			.each(function(dd,ii){
+				if(dd.party == selectedParty){
+					d3.select(this).classed("selected", true);
+				}else{
+					d3.select(this).classed("selected", false);
+				}
+			});
+			blocks[j].selectAll(".c-stroke")
+			.each(function(dd,ii){
+				if(dd.party == selectedParty){
+					d3.select(this).classed("selected", true);
+				}else{
+					d3.select(this).classed("selected", false);
+				}
+			});
+
+			partyCharts[j].selectAll(".party-bar")
+			.each(function(dd,ii){
+				if(dd.key.toUpperCase() == selectedParty.toUpperCase()){
+					d3.select(this).classed("highlighted", true);
+				}else{
+					d3.select(this).classed("highlighted", false);
+				}
+			});
+		}
+	}
+
 	let animateParties = function(lastTime){
 		let bars = partyCharts[0].selectAll(".party-bar");
 		let bar = bars.filter(function(d,i){ return i == selectedBar });
@@ -1130,13 +1153,14 @@ module.exports = function(){
 
 		selectedParty = bar.datum().key;
 		//console.log(bar.datum().key);
-
-		dispatchEvent(bar, "click");
+		
+		//dispatchEvent(bar, "click");
 
 		if(lastTime){
 			clearTimeout(window.partyTimeout);
 			return;
 		}
+		changeParty();
 
 		window.partyTimeout = setTimeout(function(){
 			if(selectedBar >= bars.size()-1){
