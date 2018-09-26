@@ -438,7 +438,7 @@ module.exports = function(){
 			.attr("y", colHeight + 17)
 			.attr("x", colWidth - 20)
 			.attr("text-anchor", "end")
-			.text("exerceu cargo eletivo")
+			.text("mandato eletivo")
 
 		svg.append("circle")
 			.attr("class", "asset-point")

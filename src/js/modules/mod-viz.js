@@ -1,7 +1,7 @@
 // builds the chart using d3
 module.exports = function(){
 	const d3 = window.d3;
-	let selectedParty = "AVANTE";
+	let selectedParty = "";
 	let url = "https://api-perfilpolitico.serenata.ai/api/candidate/2018/";
 	let candURL = "https://api-perfilpolitico.serenata.ai/api/candidate/";
 	let breakPoint = 580; // screen width
@@ -767,7 +767,7 @@ module.exports = function(){
 
 		if(firstLoad){
 			firstLoad = false;
-			animateParties();
+			//animateParties();
 		}
 		
 	}
@@ -796,9 +796,9 @@ module.exports = function(){
 				})
 				.attr("fill-opacity", 0)
 				.attr("stroke-opacity", 0)
-				.duration(400)
+				.duration(600)
 				.delay(function(d,i){
-					return (Math.random()*10)*50
+					return (Math.random()*10)*70
 				})
 				.on("end", function(d, i){
 					d3.select(this).remove();
@@ -809,7 +809,7 @@ module.exports = function(){
 		clearTimeout(scrollTimeout);
 		scrollTimeout = setTimeout(function(){
 			let lastBlock = document.querySelector("#box"+blockData.length);
-			scrollToElement(lastBlock,1600,700);
+			scrollToElement(lastBlock,1600,500);
 			//document.body.scrollTop = lastBlock.offsetTop; // For Safari
     		//document.documentElement.scrollTop = lastBlock.offsetTop; // For Chrome, Firefox, IE and Opera
 		},500)
