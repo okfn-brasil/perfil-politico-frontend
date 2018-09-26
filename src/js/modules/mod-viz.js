@@ -91,6 +91,7 @@ module.exports = function(){
 		let filters = window.currentFilters;
     	let listURL = url + filters.estado + "/" + filters.cargo + "/";
 
+    	console.log(filters);
 		d3.select("#full-info-content").classed("hidden", true);
 		d3.selectAll(".disabled").classed("disabled", false);
 

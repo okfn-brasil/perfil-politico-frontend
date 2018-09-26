@@ -191,6 +191,10 @@ label{
       color: $secondary-color;
     }
 
+    &:disabled{
+      background: $bg-light;
+    }
+
     datalist{
       max-height: 200px;
     }

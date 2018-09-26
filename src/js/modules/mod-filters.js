@@ -96,12 +96,13 @@ module.exports = function(filters){
 			}
 		});
 
-		clearTimeout(window.partyTimeout);
-
 		window.currentFilters[filterType] = selected;
 
 		if(window.currentFilters.cargo == "presidente"){
 			window.currentFilters.estado = "br";
+		}else if(window.currentFilters.cargo == "deputado-estadual" && 
+			window.currentFilters.estado == "df"){
+			window.currentFilters.cargo = "deputado-distrital";
 		}else{
 			window.currentFilters.estado = d3.select("#filtro-estado").property('value')
 		}
@@ -110,7 +111,15 @@ module.exports = function(filters){
 			window.currentFilters.estado_nome = d3.select("#filtro-estado option[selected]").attr("data-name");
 			window.currentFilters.estado_prep = d3.select("#filtro-estado option[selected]").attr("data-preposition");
 		}
-		
+
+		if(window.currentFilters.cargo == "presidente"){
+			d3.select("#filtro-estado").attr("disabled", true);
+		}else{
+			d3.select("#filtro-estado").attr("disabled", null);
+		}
+
+
+		clearTimeout(window.partyTimeout);
 		window.init();
 	});
 	
