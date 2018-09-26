@@ -147,7 +147,7 @@ module.exports = function(){
 			// corrects errors with data...
 			window.data.forEach(function(obj, i){
 				obj.party = obj.party.replace("SOLIDARIEDADE", "SD");
-				obj.party = obj.party.replace("PC DO B", "PDdoB");
+				obj.party = obj.party.replace("PC DO B", "PCdoB");
 				obj.party = obj.party.replace("PT DO B", "PTdoB");
 			});
 
@@ -295,9 +295,8 @@ module.exports = function(){
 			}, 4500);
 
 			return;
-		}else{
-			//console.log(filteredData.length);
 		}
+		
 		
 		blockData.push(filteredData);
 
@@ -399,15 +398,14 @@ module.exports = function(){
 			.entries(list)
 			.sort(function(a, b){ 
 				return d3.ascending(b.value.count, a.value.count); 
-			})
-
-		
+			});
 
 		var keys = d3.keys(nestedByParty);
-		list = [];
+		blockData[index] = [];
 		nestedByParty.forEach(function(obj, i){
-			list = list.concat(obj.value.items);
+			blockData[index] = blockData[index].concat(obj.value.items);
 		});
+		list = blockData[index];
 
 		lin = Math.ceil(colHeight/cellWidth); 
 		col = Math.ceil(list.length/lin);
@@ -460,7 +458,6 @@ module.exports = function(){
 			.on("click", function(d, i){
 				clickedBlock = blockData[index];
 				clickedCandidate = i;
-
 
 				loadCandidateData(d.id);
 			})
@@ -819,8 +816,7 @@ module.exports = function(){
 
 	function scrollToElement(element, duration = 400, delay = 0, easing = 'cubic-in-out', endCallback = () => {}) {
 	  var offsetTop = window.pageYOffset || document.documentElement.scrollTop
-	  
-	  console.log(offsetTop);
+
 	  d3.transition()
 	    //.each("end", endCallback)
 	    .delay(delay)
@@ -1157,14 +1153,15 @@ module.exports = function(){
 		//dispatchEvent(bar, "click");
 
 		if(lastTime){
+			selectedParty = "";
 			clearTimeout(window.partyTimeout);
 			return;
 		}
 		changeParty();
 
 		window.partyTimeout = setTimeout(function(){
-			if(selectedBar >= bars.size()-1){
-				selectedBar = 0;
+			if(selectedBar >= bars.size()-2){
+				selectedBar += 1;
 				animateParties(true);
 			}else{
 				selectedBar += 1;
