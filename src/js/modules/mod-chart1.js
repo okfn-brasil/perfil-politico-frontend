@@ -40,7 +40,7 @@ module.exports = function(){
 			.html(function(){
 				let filters = window.currentFilters;
 				if(filters.cargo == "deputado-estadual"){
-					return "Comparação com os eleitos em 2014 "+filters.estado_prep+" "+filters.estado;
+					return "Comparação com os eleitos em 2014 "+filters.estado_prep+" "+filters.estado.toUpperCase();
 				}else{
 					return "Comparação com os eleitos em 2014";
 				}
