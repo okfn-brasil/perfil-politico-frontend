@@ -436,7 +436,7 @@ p{
     }
 
     @media (max-width: 960px){
-      font: 1.8rem $font-default;
+      font: 1.4rem $font-default;
       width: calc( 100% - 160px - #{$inter-column}); 
       margin: 2.8rem 0 0 0;
       span{
@@ -448,13 +448,15 @@ p{
     @media (max-width: 768px){
       
       button{
-        font-size: 1.4rem;
+        font-size: 1.3rem;
       }
       button.last{
         float: left;
+        margin-left: -1rem;
       }
       button.next{
-        margin-left: 1.5rem;
+        margin-left: 1rem;
+        margin-right: -1rem;
       }
     }
 
