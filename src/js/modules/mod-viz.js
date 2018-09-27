@@ -679,7 +679,7 @@ module.exports = function(){
 			})
 			.attr("y", function(d, i){
 				let height = 1 + ((d.value.count/maxPValue)*50);
-				return -height;
+				return -height + 10;
 			})
 			.attr("class", function(d,i){
 				let pClass = "party-bar";
@@ -711,7 +711,7 @@ module.exports = function(){
 				if(w > maxPartyW){ w = maxPartyW; }
 				return 2 + (w/2) + (i*w);
 			})
-			.attr("x", -5)
+			.attr("x", -15)
 			.text(function(d,i){
 				return d.key;
 			})
@@ -754,7 +754,7 @@ module.exports = function(){
 			});
 
 		partyCharts[index].append("text")
-			.attr("y", -70)
+			.attr("y", -60)
 			.text("Selecione um partido para destacar:");
 
 		bW = svg.attr("width");

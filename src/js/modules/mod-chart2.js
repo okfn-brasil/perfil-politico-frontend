@@ -110,6 +110,7 @@ module.exports = function(){
 
 		minDate = new Date(d3.min(affiliations, function(d) { 
 			let date = window.parseDate(d.started_in);
+			date = new Date(date.getFullYear(), 0, 1);
 
 			return date;
 		}));
@@ -126,11 +127,12 @@ module.exports = function(){
 		if(earliestYear && earliestYear < minDate.getFullYear()){
 			minDate = new Date(earliestYear, 0, 1);
 		}
-
 		// set the ranges
 		x = d3.scaleTime()
 			.range([margin.left, colWidth - margin.right]);
 		y = d3.scaleLinear().range([svgHeight + margin.top - margin.bottom, margin.top]);
+
+		//console.log(x(new Date(2016,0,1)));
 
 		xAxis = d3.axisBottom(x)
 			.tickFormat(d3.timeFormat("%Y"))
@@ -162,16 +164,17 @@ module.exports = function(){
 		          : "R$" + text;
 		    });
 
-		// define the line
-		assetsLine = d3.line()
-		    .x(function(d) { return x( new Date(d.year, 0, 1)); })
-		    .y(function(d) { return y( d.value ); });
+
 
 		// Scale the range of the data
 		//d3.extent(assets, function(d) { return d.year; })
 		x.domain([minDate, maxDate]);
 		y.domain([0, d3.max(assets, function(d) { return d.value; })]).nice();
 
+		// define the line
+		assetsLine = d3.line()
+		    .x(function(d) { return x( new Date(d.year, 0, 1)); })
+		    .y(function(d) { return y( d.value ); });
 
 		svg.append("rect")
 			.attr("width", svgWidth)
@@ -234,7 +237,7 @@ module.exports = function(){
 				if(coordinates[0] < 0){
 					coordinates[0] = 0;
 				}else if(coordinates[0] > col - width){
-					coordinates[0] = col - width;
+					coordinates[0] -= width;
 				}
 
 				d3.select("#info-box")
@@ -269,9 +272,9 @@ module.exports = function(){
 		  .attr("y", svgHeight - margin.bottom + 30)
 			.on("mouseover click", function(d){
 				if(d.post == "SENADOR"){
-			  		d3.select("#info-box").html((d.year+1) + "-" + (d.year+7));
+			  		d3.select("#info-box").html("Mandato: " + (d.year+1) + "-" + (d.year+7));
 			  	}else{
-			  		d3.select("#info-box").html((d.year+1) + "-" + (d.year+4));
+			  		d3.select("#info-box").html("Mandato: " + (d.year+1) + "-" + (d.year+4));
 			  	}
 				
 				d3.select("#info-box").classed("hidden", false);
@@ -295,7 +298,7 @@ module.exports = function(){
 				if(coordinates[0] < 0){
 					coordinates[0] = 0;
 				}else if(coordinates[0] > col - width){
-					coordinates[0] = col - width;
+					coordinates[0] -= width;
 				}
 				d3.select("#info-box")
 					.attr("style", "margin-left: " +(coordinates[0])+ "px; margin-top: "+(coordinates[1] - height - 15)+"px");
@@ -384,7 +387,7 @@ module.exports = function(){
 				if(coordinates[0] < 0){
 					coordinates[0] = 0;
 				}else if(coordinates[0] > col - width){
-					coordinates[0] = col - width;
+					coordinates[0] -= width;
 				}
 				d3.select("#info-box")
 					.attr("style", "margin-left: " +(coordinates[0])+ "px; margin-top: "+(coordinates[1] - height - 15)+"px");
