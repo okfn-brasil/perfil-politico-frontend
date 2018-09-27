@@ -93,7 +93,6 @@ svg.viz{
   z-index:0;
 }
 
-
 .d-height {
   width: 1px;
   height: 100%;
@@ -327,64 +326,6 @@ p{
       padding: 2.8rem 0 0 0;
     }
   }
-
-  /*.col6-6, .col5-6, .col4-6, .col3-6, .col2-6, .col1-6{
-    float: left;
-    margin: 2.8rem $inter-column 0 0;
-
-    @media (max-width: 430px){
-      margin-right: $inter-column-small;
-    }
-  }
-
-  .col6-6{
-    width: 100%;
-    @media (max-width: 680px){
-      width: 100%;
-      margin-left: 0;
-    }
-  }
-  .col5-6{
-    width: calc( (( (100% - (#{$inter-column})*5) / 6 ) * 5 + (#{$inter-column}*4) );
-    @media (max-width: 680px){
-      width: 100%;
-      margin-left: 0;
-    }
-  }
-  .col4-6{
-    width: calc( (( (100% - (#{$inter-column})*5) / 6 ) * 4 ) + (#{$inter-column}*3) );
-    @media (max-width: 680px){
-      width: 100%;
-      margin-left: 0;
-    }
-  }
-  .col3-6{
-    width: calc( (( (100% - (#{$inter-column})*5) / 6 ) * 3 ) + (#{$inter-column}*2) );
-    
-    @media (max-width: 680px){
-      width: 100%;
-      margin-left: 0;
-    }
-  }
-
-  .col2-6{
-    width: calc( (( (100% - (#{$inter-column})*5) / 6 ) * 2 ) + (#{$inter-column}*1) );  
-    @media (max-width: 680px){
-      width: calc( (( (100% - (#{$inter-column})*2) / 3 ) * 2 ) + (#{$inter-column}*1) ); 
-    }
-    @media (max-width: 430px){
-      width: calc( (( (100% - #{$inter-column-small}) / 2 ) ) ); 
-    }
-  }
-  .col1-6{
-    width: calc( ( (100% - (#{$inter-column}*5)) / 6 ) * 1 );
-    @media (max-width: 680px){
-      width: calc( (( (100% - (#{$inter-column}*2)) / 3 ) * 1 ) + (#{$inter-column}*0) ); 
-    }
-    @media (max-width: 430px){
-      width: calc( (( (100% - (#{$inter-column}*2)) / 3 ) ) ); 
-    }
-  }*/
 
   .last{
     margin-right: 0;
@@ -839,7 +780,7 @@ h3{
 
   .column{
     color: $white;
-    padding: 2.1rem 10px 1rem 10px;
+    padding: 2.1rem 14px 1rem 14px;
     margin: 0 auto;
     display: block;
     line-height: 8rem;
@@ -852,7 +793,7 @@ h3{
     }
 
     @media (max-width: 580px){
-      padding: 1.4rem 10px;
+      padding: 1.4rem 14px;
       line-height: 3.6rem;
       font: 2.1rem $font-default;
     }
@@ -863,7 +804,7 @@ h3{
       height: 4rem;
       color: $primary-color;
       margin-bottom: 5px;
-      padding: 1.2rem 10px 1.2rem 10px;
+      padding: 1.2rem 14px 1.2rem 14px;
 
       @media (max-width: 580px){
         font: 1.35rem $font-default;
@@ -907,6 +848,10 @@ h3{
       opacity: 0.7;
       background: $bg-light;
     }
+  }
+
+  .description{
+    text-align: left;
   }
 
   @media (max-width: 580px){

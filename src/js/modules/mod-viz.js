@@ -17,9 +17,9 @@ module.exports = function(){
 	let clickedCandidate = -1;
 	let selectedChart = "age";
 	let firstLoad = true;
-	window.partyTimeout;
 	let selectedBar = 0;
 	window.parseDate = d3.timeParse("%Y-%m-%d");
+	window.partyTimeout;
 
 	let setup = function(){
 		window.contextFilters = [];
@@ -557,22 +557,21 @@ module.exports = function(){
 				.ease(d3.easeElastic)
 				.delay(function(d,i){
 					let random = Math.random()*20; 
+					let val = random*50;
 
 					if(noAnim){
-						return 0;
-					}else{
-						return random*30;
+						val = 0;
 					}
+					return val;
 				})
 				.duration(function(d,i){ 
 					let random = Math.random()*20; 
+					let val = 300 + (50*random);
 
 					if(noAnim){
-						return 0
-					}else{
-						return 300 + (10*random);
+						val = 0
 					}
-					
+					return val;
 				});
 		
 		candidates.filter(function(d,i){ return i == candidates.size()-1; })
@@ -591,7 +590,7 @@ module.exports = function(){
 		block.attr("transform", 
 						"translate("+ (bW - blockWidth)/2 +"," + newBlockY + ")");
 		
-		if(list.length <= 20){
+		if(list.length <= 30){
 			let candidateStrokes;// = block.selectAll("circle");
 			candidateStrokes = block.selectAll(".c-stroke")
 				.data(list)
@@ -666,7 +665,7 @@ module.exports = function(){
 			.enter()
 			.append("rect")
 			.attr("width", function(){
-				let w = ((blockWidth-10)/nestedByParty.length) - 2;
+				let w = ((blockWidth)/nestedByParty.length) - 2;
 				if(w > maxPartyW-2){ w = maxPartyW-2; }
 				return w;
 			})
@@ -674,13 +673,13 @@ module.exports = function(){
 				return 1 + ((d.value.count/maxPValue)*50);
 			})
 			.attr("x", function(d, i){
-				let w = ((blockWidth-10)/nestedByParty.length);
+				let w = ((blockWidth)/nestedByParty.length);
 				if(w > maxPartyW){ w = maxPartyW; }
 				return (i*w);
 			})
 			.attr("y", function(d, i){
 				let height = 1 + ((d.value.count/maxPValue)*50);
-				return -height + 10;
+				return -height;
 			})
 			.attr("class", function(d,i){
 				let pClass = "party-bar";
@@ -708,11 +707,11 @@ module.exports = function(){
 			.attr("text-anchor", "end")
 			.attr("transform", "rotate(-90)")
 			.attr("y", function(d, i){
-				let w = ((blockWidth-10)/nestedByParty.length);
+				let w = ((blockWidth)/nestedByParty.length);
 				if(w > maxPartyW){ w = maxPartyW; }
 				return 2 + (w/2) + (i*w);
 			})
-			.attr("x", -15)
+			.attr("x", -5)
 			.text(function(d,i){
 				return d.key;
 			})
@@ -755,7 +754,7 @@ module.exports = function(){
 			});
 
 		partyCharts[index].append("text")
-			.attr("y", -60)
+			.attr("y", -70)
 			.text("Selecione um partido para destacar:");
 
 		bW = svg.attr("width");
@@ -796,9 +795,9 @@ module.exports = function(){
 				})
 				.attr("fill-opacity", 0)
 				.attr("stroke-opacity", 0)
-				.duration(600)
+				.duration(500)
 				.delay(function(d,i){
-					return (Math.random()*10)*70
+					return (Math.random()*10)*100
 				})
 				.on("end", function(d, i){
 					d3.select(this).remove();
@@ -812,7 +811,7 @@ module.exports = function(){
 			scrollToElement(lastBlock,1600,500);
 			//document.body.scrollTop = lastBlock.offsetTop; // For Safari
     		//document.documentElement.scrollTop = lastBlock.offsetTop; // For Chrome, Firefox, IE and Opera
-		},500)
+		},600)
 	}
 
 	function scrollToElement(element, duration = 400, delay = 0, easing = 'cubic-in-out', endCallback = () => {}) {
@@ -1014,21 +1013,21 @@ module.exports = function(){
 
 	window.resize = function(){
 		wHeight = parseInt(window.innerHeight);
-		colWidth = parseInt(document.querySelector('.column').offsetWidth) - 40;
+		colWidth = parseInt(document.querySelector('.column').offsetWidth) - 28;
 
 
 		if(colWidth > breakPoint){
-			colHeight = wHeight - 580;//Math.round(colWidth*0.4);
+			colHeight = wHeight - 620;//Math.round(colWidth*0.4);
 			margin = {top: 0, right: 0, bottom: 0, left: 0};
 		}else{
-			colHeight = wHeight - 580;
+			colHeight = wHeight - 620;
 			margin = {top: 0, right: 0, bottom: 0, left: 0};
 		}
-		if(colHeight < 140){
-			colHeight = 140;
+		if(colHeight < 120){
+			colHeight = 120;
 		}
-		if(wHeight < 500){
-			wHeight = 500;
+		if(wHeight < 520){
+			wHeight = 520;
 		}
 
 	    svgHeight = wHeight*blockData.length;
