@@ -923,7 +923,7 @@ module.exports = function(){
     		.attr("src", cData.image);
 
     	d3.select("#profile-name span")
-    		.text(window.capitalizeName(cData.ballot_name));
+    		.text(window.capitalizeName(cData.ballot_name) + " (" + cData.ballot_number + ")");
 
     	d3.select("#info-partido")
     		.text(correctParty(cData.party_abbreviation));
