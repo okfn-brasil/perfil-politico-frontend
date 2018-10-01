@@ -57,6 +57,10 @@ body{
   }
 }
 
+i, em {
+  font-style: italic;
+}
+
 b, strong{
   font-weight: 700;
 }
@@ -69,6 +73,11 @@ a{
   &:hover{
     text-decoration: underline;
   }
+}
+
+ol.styled li {
+    list-style-type: decimal;
+    list-style-position: inside;
 }
 
 #main {
