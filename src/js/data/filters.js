@@ -154,6 +154,12 @@ module.exports = [
 			"plural": "Deputados Estaduais"
 		},
 		{
+			"valor": "deputado-distrital",
+			"nome": "Deputado Distrital",
+			"feminino": "Deputada Distrital",
+			"plural": "Deputados Distritais"
+		},
+		{
 			"valor": "senador",
 			"nome": "Senador",
 			"feminino": "Senadora",
