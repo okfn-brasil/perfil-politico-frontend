@@ -957,6 +957,25 @@ module.exports = function(){
     	d3.select("#info-coliga")
     		.text(correctParty(cData.coalition_description));
 		//d3.select("#info-partido").text();
+
+    if (cData.rosies_suspicions.length > 0) {
+      d3.select("#rosies-suspicions")
+        .append("h4")
+        .html("Suspeitas no uso da Cota Para Exercício da Atividade Parlamentar");
+
+      d3.select("#rosies-suspicions")
+        .append("ul").
+        attr("id", "rosies-suspicions-list");
+
+      for (var i = 0; i < cData.rosies_suspicions.length; i++) {
+        d3.select("#rosies-suspicions-list")
+          .append("li")
+          .append("a")
+          .attr("href", cData.rosies_suspicions[i].url)
+          .html(cData.rosies_suspicions[i].suspicion);
+      }
+    }
+
 	}
 
 	let disableQuestion = function(type){
