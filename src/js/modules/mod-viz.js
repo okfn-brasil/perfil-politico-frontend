@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 // builds the chart using d3
 module.exports = function() {
   const d3 = window.d3;
@@ -572,8 +573,7 @@ module.exports = function() {
             .attr("height", dotRadius * 2.8); // (dotRadius*2)*1.3
           //
 
-          return "url(#img_" + index + "_" + d.id;
-          +")";
+          return "url(#img_" + index + "_" + d.id + ")";
         } else {
           return false;
         }
@@ -976,6 +976,7 @@ module.exports = function() {
       d3.select("#chart2").classed("hidden", true);
 
       if (error) {
+        // eslint-disable-next-line no-console
         console.log(error);
         d3.select("#msg-box").html(
           "Erro ao carregar dados do candidato (id " + id + ")"
@@ -1250,7 +1251,6 @@ module.exports = function() {
         phrase = prep[currGender] + ", <b>" + amount + "</b> são de cor branca";
       }
     } else {
-      color = colorPl;
       if (filterType == "mulheres") {
         phrase = prep[currGender] + ", <b>" + amount + "</b> é mulher";
         currGender = "f";
@@ -1349,6 +1349,7 @@ module.exports = function() {
 };
 
 let equalToEventTarget = function() {
+  const d3 = window.d3;
   return this == d3.event.target;
 };
 let correctParty = function(party) {
