@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 // builds the chart using d3
 module.exports = function() {
   const d3 = window.d3;
@@ -6,8 +5,8 @@ module.exports = function() {
   let url = "https://api-perfilpolitico.serenata.ai/api/candidate/2018/";
   let candURL = "https://api-perfilpolitico.serenata.ai/api/candidate/";
   let breakPoint = 580; // screen width
-  let margin, wHeight, svgWidth, svgHeight, colWidth, colHeight;
-  let x, y, svg;
+  let margin, wHeight, wWidth, svgWidth, svgHeight, colWidth, colHeight;
+  let x, y, linePath, svg;
   let blockData = [],
     blocks = [],
     partyCharts = [];
@@ -31,7 +30,7 @@ module.exports = function() {
       this.focus();
       this.setSelectionRange(0, this.value.length);
     });
-    searchBox.addEventListener("input", function() {
+    searchBox.addEventListener("input", function(event) {
       var val = this.value.toLowerCase().split(" - ")[0];
       var opts = document.getElementById("candidate-list").childNodes;
       var id;
@@ -60,7 +59,7 @@ module.exports = function() {
     });
 
     let questions = document.querySelector("#filtro-perguntas");
-    questions.addEventListener("change", function() {
+    questions.addEventListener("change", function(event) {
       let selected = questions.value.toLowerCase();
 
       addBlock(selected);
@@ -158,7 +157,7 @@ module.exports = function() {
       //window.data = window.data.objects;
 
       // corrects errors with data...
-      window.data.forEach(function(obj) {
+      window.data.forEach(function(obj, i) {
         obj.party = obj.party.replace("SOLIDARIEDADE", "SD");
         obj.party = obj.party.replace("PC DO B", "PCdoB");
         obj.party = obj.party.replace("PT DO B", "PTdoB");
@@ -218,10 +217,16 @@ module.exports = function() {
 
   let toCurrency = function(value) {
     const rounded = parseFloat(value).toFixed(2);
-    return "R$ " + parseFloat(rounded).toLocaleString("pt-BR");
+    return parseFloat(rounded).toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
   };
 
   let loadStaticData = function(i) {
+    let dataPoint = staticData[i];
     let url = staticURL[i];
     if (window.currentFilters.cargo == "deputado-estadual") {
       url = staticURLState[i];
@@ -240,7 +245,7 @@ module.exports = function() {
       "option[value='" + filterType + "']"
     );
     let h2Title = "";
-    let prevCandidates, removed, prevBlock, pBox, newBlockY;
+    let prevCandidates, removed, prevBlock, temp, pBox, newBlockY;
 
     window.contextFilters.push(filterType);
 
@@ -257,7 +262,7 @@ module.exports = function() {
       filteredData = filteredData.filter(function(c) {
         return c.elections_won == 0;
       });
-      removed = prevCandidates.filter(function(d) {
+      removed = prevCandidates.filter(function(d, i) {
         return d.elections_won == 0;
       });
     } else if (filterType == "já eleitos") {
@@ -266,7 +271,7 @@ module.exports = function() {
       filteredData = filteredData.filter(function(c) {
         return c.elections_won > 1;
       });
-      removed = prevCandidates.filter(function(d) {
+      removed = prevCandidates.filter(function(d, i) {
         return d.elections_won > 1;
       });
     } else if (filterType == "nunca concorreram") {
@@ -275,7 +280,7 @@ module.exports = function() {
       filteredData = filteredData.filter(function(c) {
         return c.elections == 0;
       });
-      removed = prevCandidates.filter(function(d) {
+      removed = prevCandidates.filter(function(d, i) {
         return d.elections == 0;
       });
     } else if (filterType == "mulheres") {
@@ -283,7 +288,7 @@ module.exports = function() {
       filteredData = filteredData.filter(function(c) {
         return c.gender.toLowerCase() == "feminino";
       });
-      removed = prevCandidates.filter(function(d) {
+      removed = prevCandidates.filter(function(d, i) {
         return d.gender.toLowerCase() == "feminino";
       });
     } else if (filterType == "homens") {
@@ -291,7 +296,7 @@ module.exports = function() {
       filteredData = filteredData.filter(function(c) {
         return c.gender.toLowerCase() != "feminino";
       });
-      removed = prevCandidates.filter(function(d) {
+      removed = prevCandidates.filter(function(d, i) {
         return d.gender.toLowerCase() != "feminino";
       });
     } else if (filterType == "brancos") {
@@ -299,7 +304,7 @@ module.exports = function() {
       filteredData = filteredData.filter(function(c) {
         return c.ethnicity.toLowerCase() == "branca";
       });
-      removed = prevCandidates.filter(function(d) {
+      removed = prevCandidates.filter(function(d, i) {
         return d.ethnicity.toLowerCase() == "branca";
       });
     } else if (filterType == "negros ou pardos") {
@@ -311,7 +316,7 @@ module.exports = function() {
           c.ethnicity.toLowerCase() == "indigena"
         );
       });
-      removed = prevCandidates.filter(function(d) {
+      removed = prevCandidates.filter(function(d, i) {
         return (
           d.ethnicity.toLowerCase() == "preta" ||
           d.ethnicity.toLowerCase() == "parda" ||
@@ -398,7 +403,7 @@ module.exports = function() {
 
     if (blockData.length == 1) {
       d3.selectAll("#candidate-list option").remove();
-      sortedByName.forEach(function(obj) {
+      sortedByName.forEach(function(obj, i) {
         let party = obj.party;
         let value = obj.name + " - " + party;
         let nameList = d3.select("#candidate-list");
@@ -434,7 +439,7 @@ module.exports = function() {
     let initRadius = 0.5;
     let nestedByParty;
     let partyBlock;
-    let bW, pBox, newBlockY, pBlockW, currBlockH;
+    let bW, currBlockTop, pBox, pRect, newBlockY, pBlockW, currBlockH;
 
     if (blocks.length > 1) {
       d3.select(".restart-bt").classed("hidden", false);
@@ -458,8 +463,9 @@ module.exports = function() {
         return d3.ascending(b.value.count, a.value.count);
       });
 
+    var keys = d3.keys(nestedByParty);
     blockData[index] = [];
-    nestedByParty.forEach(function(obj) {
+    nestedByParty.forEach(function(obj, i) {
       blockData[index] = blockData[index].concat(obj.value.items);
     });
     list = blockData[index];
@@ -509,7 +515,7 @@ module.exports = function() {
 
     candidates
       .attr("r", initRadius)
-      .attr("id", function(d) {
+      .attr("id", function(d, i) {
         return "c_" + index + "_" + d.id;
       })
       .on("click", function(d, i) {
@@ -534,6 +540,7 @@ module.exports = function() {
       .attr("cx", function(d, i) {
         let startX = cellWidth / 2;
         let currCol = Math.floor(i / lin);
+        let currLin = i - currCol * lin;
 
         return startX + currCol * cellWidth;
       })
@@ -544,12 +551,12 @@ module.exports = function() {
 
         return startY + currLin * cellHeight;
       })
-      .attr("fill", function(d) {
+      .attr("fill", function(d, i) {
         if (list.length <= 20) {
           svg
             .select("defs")
             .append("pattern")
-            .attr("id", function() {
+            .attr("id", function(dd, ii) {
               return "img_" + index + "_" + d.id;
             })
             .attr("patternUnits", "objectBoundingBox")
@@ -558,14 +565,15 @@ module.exports = function() {
             .attr("width", 1.1) // dotRadius*2
             .attr("height", 1.4) // (dotRadius*2)*1.3
             .append("image")
-            .attr("xlink:href", function() {
+            .attr("xlink:href", function(dd, ii) {
               return d.image;
             })
             .attr("width", dotRadius * 2) // dotRadius*2
             .attr("height", dotRadius * 2.8); // (dotRadius*2)*1.3
           //
 
-          return "url(#img_" + index + "_" + d.id + ")";
+          return "url(#img_" + index + "_" + d.id;
+          +")";
         } else {
           return false;
         }
@@ -585,13 +593,13 @@ module.exports = function() {
 
         clearTimeout(infoTimeout);
       })
-      .on("mouseout", function() {
+      .on("mouseout", function(d) {
         clearTimeout(infoTimeout);
         infoTimeout = setTimeout(function() {
           d3.select("#info-box").classed("hidden", true);
         }, 500);
       })
-      .on("mousemove", function() {
+      .on("mousemove", function(d) {
         let coordinates = d3.mouse(d3.select("body").node());
         let height = d3.select("#info-box").node().offsetHeight;
         let width = d3.select("#info-box").node().offsetWidth;
@@ -618,7 +626,7 @@ module.exports = function() {
       .transition()
       .attr("r", dotRadius)
       .ease(d3.easeElastic)
-      .delay(function() {
+      .delay(function(d, i) {
         let random = Math.random() * 20;
         let val = random * 50;
 
@@ -627,7 +635,7 @@ module.exports = function() {
         }
         return val;
       })
-      .duration(function() {
+      .duration(function(d, i) {
         let random = Math.random() * 20;
         let val = 300 + 50 * random;
 
@@ -641,7 +649,7 @@ module.exports = function() {
       .filter(function(d, i) {
         return i == candidates.size() - 1;
       })
-      .on("end", function() {
+      .on("end", function(d, i) {
         newBlockY = pBox.offsetTop + pBox.offsetHeight;
         blockWidth = block.node().getBBox().width + dotRadius;
         block.attr(
@@ -661,26 +669,27 @@ module.exports = function() {
     );
 
     if (list.length <= 30) {
-      // candidate_strokes
-      block
+      let candidateStrokes; // = block.selectAll("circle");
+      candidateStrokes = block
         .selectAll(".c-stroke")
         .data(list)
         .enter()
         .append("circle")
         .attr("r", dotRadius)
-        .attr("class", function(d) {
+        .attr("class", function(d, i) {
           let selected = "";
           if (d.party === selectedParty) {
             selected = " selected";
           }
           return "c-stroke" + selected;
         })
-        .attr("id", function(d) {
+        .attr("id", function(d, i) {
           return "cs_" + index + "_" + d.id;
         })
         .attr("cx", function(d, i) {
           let startX = cellWidth / 2;
           let currCol = Math.floor(i / lin);
+          let currLin = i - currCol * lin;
 
           return startX + currCol * cellWidth;
         })
@@ -707,12 +716,12 @@ module.exports = function() {
 		// new stuff
 		nestedByParty = d3.nest()
 			.key(function(d) { return d.party; })
-			.rollup(function(leaves) { 
+			.rollup(function(leaves) {
 				return leaves.length;
 			})
 			.entries(filteredData)
-			.sort(function(a, b){ 
-				return d3.ascending(b.value, a.value); 
+			.sort(function(a, b){
+				return d3.ascending(b.value, a.value);
 			})*/
 
     let maxPartyW = 90;
@@ -742,7 +751,7 @@ module.exports = function() {
         }
         return w;
       })
-      .attr("height", function(d) {
+      .attr("height", function(d, i) {
         return 1 + (d.value.count / maxPValue) * 50;
       })
       .attr("x", function(d, i) {
@@ -752,11 +761,11 @@ module.exports = function() {
         }
         return i * w;
       })
-      .attr("y", function(d) {
+      .attr("y", function(d, i) {
         let height = 1 + (d.value.count / maxPValue) * 50;
         return -height + 10;
       })
-      .attr("class", function(d) {
+      .attr("class", function(d, i) {
         let pClass = "party-bar";
         if (d.key.toUpperCase() == selectedParty.toUpperCase()) {
           pClass += " highlighted";
@@ -764,7 +773,8 @@ module.exports = function() {
         return pClass;
       })
       .attr("data-index", blockData.length - 1)
-      .on("click", function(d) {
+      .on("click", function(d, i) {
+        let index = d3.select(this).attr("data-index");
         selectedParty = d.key;
 
         clearTimeout(window.partyTimeout);
@@ -788,24 +798,25 @@ module.exports = function() {
         return 2 + w / 2 + i * w;
       })
       .attr("x", -15)
-      .text(function(d) {
+      .text(function(d, i) {
         return d.key;
       })
       .attr("data-index", blockData.length - 1)
-      .on("click", function(d) {
+      .on("click", function(d, i) {
+        let index = d3.select(this).attr("data-index");
         selectedParty = d.key;
 
         clearTimeout(window.partyTimeout);
 
         for (let j = 0; j < blocks.length; j++) {
-          blocks[j].selectAll(".c").each(function(dd) {
+          blocks[j].selectAll(".c").each(function(dd, ii) {
             if (dd.party == selectedParty) {
               d3.select(this).classed("selected", true);
             } else {
               d3.select(this).classed("selected", false);
             }
           });
-          blocks[j].selectAll(".c-stroke").each(function(dd) {
+          blocks[j].selectAll(".c-stroke").each(function(dd, ii) {
             if (dd.party == selectedParty) {
               d3.select(this).classed("selected", true);
             } else {
@@ -813,7 +824,7 @@ module.exports = function() {
             }
           });
 
-          partyCharts[j].selectAll(".party-bar").each(function(dd) {
+          partyCharts[j].selectAll(".party-bar").each(function(dd, ii) {
             if (dd.key.toUpperCase() == selectedParty.toUpperCase()) {
               d3.select(this).classed("highlighted", true);
             } else {
@@ -857,7 +868,7 @@ module.exports = function() {
     }
 
     temp = prevBlock.append("g");
-    removed.each(function() {
+    removed.each(function(d, i) {
       let cand = d3.select(this);
       let cloned = cand.node().cloneNode(true);
 
@@ -868,17 +879,17 @@ module.exports = function() {
       .attr("fill-opacity", 1)
       .attr("stroke-opacity", 1)
       .transition()
-      .attr("cy", function() {
+      .attr("cy", function(dd, ii) {
         let candY = d3.select(this).attr("cy");
         return parseInt(candY) + 500;
       })
       .attr("fill-opacity", 0)
       .attr("stroke-opacity", 0)
       .duration(500)
-      .delay(function() {
+      .delay(function(d, i) {
         return Math.random() * 10 * 100;
       })
-      .on("end", function() {
+      .on("end", function(d, i) {
         d3.select(this).remove();
       });
 
@@ -893,9 +904,13 @@ module.exports = function() {
     }, 600);
   };
 
-  function scrollToElement(element, duration = 400, delay = 0) {
-    // easing = "cubic-in-out",
-    // endCallback = () => {}
+  function scrollToElement(
+    element,
+    duration = 400,
+    delay = 0,
+    easing = "cubic-in-out",
+    endCallback = () => {}
+  ) {
     var offsetTop = window.pageYOffset || document.documentElement.scrollTop;
 
     d3.transition()
@@ -961,7 +976,6 @@ module.exports = function() {
       d3.select("#chart2").classed("hidden", true);
 
       if (error) {
-        // eslint-disable-next-line no-console
         console.log(error);
         d3.select("#msg-box").html(
           "Erro ao carregar dados do candidato (id " + id + ")"
@@ -1026,7 +1040,7 @@ module.exports = function() {
 
     d3.select("#info-raca").text(cData.ethnicity.toLowerCase());
 
-    d3.select("#info-elected").text(function() {
+    d3.select("#info-elected").text(function(d, i) {
       let num_won = cData.elections_won;
 
       if (num_won > 0) {
@@ -1123,7 +1137,7 @@ module.exports = function() {
     let arrowLeft = d3.select("#profile-name button.last");
     let arrowRight = d3.select("#profile-name button.next");
 
-    buttons.on("click", function() {
+    buttons.on("click", function(item, i) {
       let prop = d3.select(this).attr("data-prop");
       selectedChart = prop;
 
@@ -1134,7 +1148,7 @@ module.exports = function() {
       d3.select("#chart1 svg#chart-" + prop).classed("active", true);
     });
 
-    arrowLeft.on("click", function() {
+    arrowLeft.on("click", function(item, i) {
       if (clickedCandidate > 0) {
         clickedCandidate -= 1;
       } else {
@@ -1144,7 +1158,7 @@ module.exports = function() {
       loadCandidateData(clickedBlock[clickedCandidate].id);
     });
 
-    arrowRight.on("click", function() {
+    arrowRight.on("click", function(item, i) {
       if (clickedCandidate < clickedBlock.length - 1) {
         clickedCandidate += 1;
       } else {
@@ -1236,6 +1250,7 @@ module.exports = function() {
         phrase = prep[currGender] + ", <b>" + amount + "</b> são de cor branca";
       }
     } else {
+      color = colorPl;
       if (filterType == "mulheres") {
         phrase = prep[currGender] + ", <b>" + amount + "</b> é mulher";
         currGender = "f";
@@ -1276,14 +1291,14 @@ module.exports = function() {
 
   let changeParty = function() {
     for (let j = 0; j < blocks.length; j++) {
-      blocks[j].selectAll(".c").each(function(dd) {
+      blocks[j].selectAll(".c").each(function(dd, ii) {
         if (dd.party == selectedParty) {
           d3.select(this).classed("selected", true);
         } else {
           d3.select(this).classed("selected", false);
         }
       });
-      blocks[j].selectAll(".c-stroke").each(function(dd) {
+      blocks[j].selectAll(".c-stroke").each(function(dd, ii) {
         if (dd.party == selectedParty) {
           d3.select(this).classed("selected", true);
         } else {
@@ -1291,7 +1306,7 @@ module.exports = function() {
         }
       });
 
-      partyCharts[j].selectAll(".party-bar").each(function(dd) {
+      partyCharts[j].selectAll(".party-bar").each(function(dd, ii) {
         if (dd.key.toUpperCase() == selectedParty.toUpperCase()) {
           d3.select(this).classed("highlighted", true);
         } else {
@@ -1334,10 +1349,8 @@ module.exports = function() {
 };
 
 let equalToEventTarget = function() {
-  const d3 = window.d3;
   return this == d3.event.target;
 };
-
 let correctParty = function(party) {
   let corrected = party.toUpperCase();
 
