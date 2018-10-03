@@ -1271,6 +1271,33 @@ h3{
   }
 }
 
+.suspicion {
+  align-items: center;
+  display: flex;
+  margin-bottom: 1rem;
 
+  a {
+    border: .25rem solid $secondary-color;
+    border-radius: .25rem;
+    color: $secondary-color;
+    display: block;
+    padding: .75rem 2rem;
+    text-decoration: none;
+    text-transform: uppercase;
 
+    &:hover {
+      background-color: $secondary-color;
+      color: $white;
+    }
+  }
 
+  div {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: 0 0 0 1rem;
+  }
+
+  p { margin: 0 }
+
+}

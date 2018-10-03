@@ -91,7 +91,7 @@ module.exports = function(){
 		let filters = window.currentFilters;
     	let listURL = url + filters.estado + "/" + filters.cargo + "/";
 
-    	console.log(filters);
+		// console.log(filters);
 		d3.select("#full-info-content").classed("hidden", true);
 		d3.selectAll(".disabled").classed("disabled", false);
 
@@ -179,6 +179,11 @@ module.exports = function(){
 		}
 		initFileEvents();
 	}
+
+	let toCurrency = function (value) {
+		const rounded = parseFloat(value).toFixed(2);
+		return "R$ " + parseFloat(rounded).toLocaleString("pt-BR");
+	};
 
 	let loadStaticData = function(i){
 		let dataPoint = staticData[i];
@@ -958,25 +963,68 @@ module.exports = function(){
     		.text(correctParty(cData.coalition_description));
 		//d3.select("#info-partido").text();
 
-    if (cData.rosies_suspicions.length > 0) {
-      d3.select("#rosies-suspicions")
-        .append("h4")
-        .html("Suspeitas no uso da Cota Para Exercício da Atividade Parlamentar");
-
-      d3.select("#rosies-suspicions")
-        .append("ul").
-        attr("id", "rosies-suspicions-list");
-
-      for (var i = 0; i < cData.rosies_suspicions.length; i++) {
-        d3.select("#rosies-suspicions-list")
-          .append("li")
-          .append("a")
-          .attr("href", cData.rosies_suspicions[i].url)
-          .html(cData.rosies_suspicions[i].suspicion);
-      }
-    }
+    	fillRosiesSuspicions(cData.rosies_suspicions);
 
 	}
+
+	let fillRosiesSuspicions = function (suspicions) {
+		if (suspicions.length == 0) {
+			return;
+		}
+
+		d3.select("#rosies-suspicions")
+			.append("h4")
+			.html("Suspeitas no uso da Cota Para Exercício da Atividade Parlamentar");
+
+		for (var i = 0; i < suspicions.length; i++) {
+			fillRosiesSuspicion(suspicions[i]);
+		};
+
+		if (suspicions.length > 1) {
+			var total = suspicions.reduce(function (total, suspicion) { return total + suspicion.value}, 0);
+			var summary = document.createElement("p");
+			var summaryLabel = document.createElement("b");
+			var summaryText = document.createTextNode(" " + suspicions.length + " suspeitas / " + toCurrency(total));
+
+			summaryLabel.innerHTML = "Total:";
+			summary.appendChild(summaryLabel);
+			summary.appendChild(summaryText);
+			document.querySelector("#rosies-suspicions").appendChild(summary);
+		}
+
+	};
+
+	let fillRosiesSuspicion = function (suspicion) {
+		var div = document.createElement("div");
+		div.setAttribute("class", "suspicion");
+
+		var link = document.createElement("a");
+		link.setAttribute("href", suspicion.url);
+		link.innerHTML = "Ver";
+
+		var description = document.createElement("p");
+		var descriptionLabel = document.createElement("b");
+		var descriptionText = document.createTextNode(" " + suspicion.suspicion);
+		descriptionLabel.innerHTML = "Suspeita:";
+		description.appendChild(descriptionLabel);
+		description.appendChild(descriptionText);
+
+		var value = document.createElement("p");
+		var valueLabel = document.createElement("b");
+		var valueText = document.createTextNode(" " + toCurrency(suspicion.value));
+		valueLabel.innerHTML = "Valor:";
+		value.appendChild(valueLabel);
+		value.appendChild(valueText);
+
+		var details = document.createElement("div");
+		details.appendChild(description);
+		details.appendChild(value);
+
+		div.appendChild(link);
+		div.appendChild(details);
+
+		document.querySelector("#rosies-suspicions").appendChild(div);
+	};
 
 	let disableQuestion = function(type){
 		let questions = document.querySelectorAll("#filtro-perguntas option");
