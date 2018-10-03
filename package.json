@@ -4,7 +4,15 @@
   "main": "gulpfile.js",
   "scripts": {
     "start": "gulp",
-    "build": "gulp build"
+    "build": "gulp build",
+    "lint": "eslint .",
+    "precommit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "git add"
+    ]
   },
   "author": "Carol X.",
   "license": "GPL-3.0",
@@ -26,5 +34,10 @@
     "gulp-sass": "^4.0.1",
     "run-sequence": "^2.2.1",
     "vinyl-source-stream": "^2.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^5.6.1",
+    "husky": "^1.1.0",
+    "lint-staged": "^7.3.0"
   }
 }
