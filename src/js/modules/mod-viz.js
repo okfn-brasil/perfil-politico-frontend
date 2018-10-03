@@ -59,7 +59,7 @@ module.exports = function(){
 		let questions = document.querySelector("#filtro-perguntas");
 		questions.addEventListener("change", function(event){
 			let selected = questions.value.toLowerCase();
-			
+
 			addBlock(selected);
 		});
 
@@ -101,7 +101,7 @@ module.exports = function(){
 			.attr("disabled", false);
 		document.querySelector("#filtro-perguntas").selectedIndex = "0";
 
-			
+
 		window.customSelects();
 
 		// reset control arrays
@@ -136,7 +136,7 @@ module.exports = function(){
 			.attr("type", "matrix")
 			.attr("values", "0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0")
 
-		
+
 		d3.select("#box1")
 				.select(".description")
 				.html("")
@@ -182,7 +182,10 @@ module.exports = function(){
 
 	let toCurrency = function (value) {
 		const rounded = parseFloat(value).toFixed(2);
-		return "R$ " + parseFloat(rounded).toLocaleString("pt-BR");
+		return parseFloat(rounded).toLocaleString("pt-BR", {
+			style: "currency", currency: "BRL",
+			minimumFractionDigits: 2, maximumFractionDigits: 2
+		});
 	};
 
 	let loadStaticData = function(i){
@@ -211,7 +214,7 @@ module.exports = function(){
 		if(blockData.length == 0){
 			filteredData = window.data;
 		}else{
-			filteredData = blockData[blockData.length-1 ];//blockData.length-1 
+			filteredData = blockData[blockData.length-1 ];//blockData.length-1
 			prevBlock = blocks[blocks.length-1];//blocks.length-1
 			prevCandidates = prevBlock.selectAll(".c");
 		}
@@ -232,7 +235,7 @@ module.exports = function(){
 			});
 			removed = prevCandidates.filter(function(d,i){
 				return d.elections_won > 1;
-			}); 
+			});
 		}else if(filterType == "nunca concorreram"){
 			disableQuestion("já eleitos");
 			disableQuestion("nunca eleitos");
@@ -241,7 +244,7 @@ module.exports = function(){
 			});
 			removed = prevCandidates.filter(function(d,i){
 				return d.elections == 0;
-			}); 
+			});
 		}else if(filterType == "mulheres"){
 			disableQuestion("homens");
 			filteredData = filteredData.filter(function(c) {
@@ -269,13 +272,13 @@ module.exports = function(){
 		}else if(filterType == "negros ou pardos"){
 			disableQuestion("brancos");
 			filteredData = filteredData.filter(function(c) {
-				return c.ethnicity.toLowerCase() == "preta" || 
-					c.ethnicity.toLowerCase() == "parda" || 
+				return c.ethnicity.toLowerCase() == "preta" ||
+					c.ethnicity.toLowerCase() == "parda" ||
 					c.ethnicity.toLowerCase() == "indigena";
 			});
 			removed = prevCandidates.filter(function(d,i){
-				return d.ethnicity.toLowerCase() == "preta" || 
-					d.ethnicity.toLowerCase() == "parda" || 
+				return d.ethnicity.toLowerCase() == "preta" ||
+					d.ethnicity.toLowerCase() == "parda" ||
 					d.ethnicity.toLowerCase() == "indigena";
 			});
 		}else{
@@ -289,7 +292,7 @@ module.exports = function(){
 			h2Title = selectedOption.innerHTML;
 			text = getDescription(filterType, filteredData.length);
 		}
-		
+
 
 		if(filteredData.length == 0){
 			d3.select("#msg-box").html("Nenhum candidato corresponde a este filtro");
@@ -302,8 +305,8 @@ module.exports = function(){
 
 			return;
 		}
-		
-		
+
+
 		blockData.push(filteredData);
 
 		svgHeight = wHeight*(blockData.length);
@@ -313,7 +316,7 @@ module.exports = function(){
 			.attr("width", svgWidth)
 			.attr("height", svgHeight);
 
-		
+
 		if(blockData.length > 1){
 			newBox = d3.select("body").insert("div","#bottom-bar");
 			newBox.attr("class", "box-content")
@@ -341,7 +344,7 @@ module.exports = function(){
 			.attr("id", "viz_"+blockData.length)
 			.attr("class", "viz");
 
-		blocks.push(newBlock); 
+		blocks.push(newBlock);
 
 		let sortedByName = filteredData.sort(function(a, b){
 		   return d3.ascending(a.name, b.name);
@@ -354,7 +357,7 @@ module.exports = function(){
 				let value = obj.name + " - " + party;
 				let nameList = d3.select("#candidate-list");
 				let occurrences = nameList.selectAll("option[value='"+value+"']")
-				
+
 				//console.log(value);
 				if(occurrences.size() < 1){
 					d3.select("#candidate-list")
@@ -395,15 +398,15 @@ module.exports = function(){
 
 		nestedByParty = d3.nest()
 			.key(function(d) { return d.party; })
-			.rollup(function(leaves) { 
+			.rollup(function(leaves) {
 				return {
 					count: leaves.length,
 					items: leaves
 				};
 			})
 			.entries(list)
-			.sort(function(a, b){ 
-				return d3.ascending(b.value.count, a.value.count); 
+			.sort(function(a, b){
+				return d3.ascending(b.value.count, a.value.count);
 			});
 
 		var keys = d3.keys(nestedByParty);
@@ -413,14 +416,14 @@ module.exports = function(){
 		});
 		list = blockData[index];
 
-		lin = Math.ceil(colHeight/cellWidth); 
+		lin = Math.ceil(colHeight/cellWidth);
 		col = Math.ceil(list.length/lin);
 
 
 		if(list.length <= 10 &&
 			(colWidth >= breakPoint) ){
 			cellWidth = (colWidth)/list.length;
-			
+
 			if (cellWidth > 120){
 				cellWidth = 120;
 			}
@@ -530,7 +533,7 @@ module.exports = function(){
 
 				d3.select("#info-box").html(window.capitalizeName(d.name) + " ("+d.party+")");
 				d3.select("#info-box").classed("hidden", false);
-				
+
 				clearTimeout(infoTimeout);
 			})
 			.on("mouseout", function(d){
@@ -554,14 +557,14 @@ module.exports = function(){
 
 				d3.select("#info-box")
 					.attr("style", "margin-left: " +(coordinates[0]-40)+ "px; margin-top: "+(coordinates[1] - height - 15)+"px");
-				
+
 				clearTimeout(infoTimeout);
 			})
 			.transition()
 				.attr("r", dotRadius)
 				.ease(d3.easeElastic)
 				.delay(function(d,i){
-					let random = Math.random()*20; 
+					let random = Math.random()*20;
 					let val = random*50;
 
 					if(noAnim){
@@ -569,8 +572,8 @@ module.exports = function(){
 					}
 					return val;
 				})
-				.duration(function(d,i){ 
-					let random = Math.random()*20; 
+				.duration(function(d,i){
+					let random = Math.random()*20;
 					let val = 300 + (50*random);
 
 					if(noAnim){
@@ -578,12 +581,12 @@ module.exports = function(){
 					}
 					return val;
 				});
-		
+
 		candidates.filter(function(d,i){ return i == candidates.size()-1; })
 		.on("end", function(d,i){
 			newBlockY = pBox.offsetTop + pBox.offsetHeight;
 			blockWidth = block.node().getBBox().width + dotRadius;
-			block.attr("transform", 
+			block.attr("transform",
 			"translate("+ (bW - blockWidth)/2 +"," + newBlockY + ")");
 		});
 
@@ -592,9 +595,9 @@ module.exports = function(){
 		newBlockY = pBox.offsetTop + pBox.offsetHeight;
 
 		blockWidth = block.node().getBBox().width + (dotRadius*2);
-		block.attr("transform", 
+		block.attr("transform",
 						"translate("+ (bW - blockWidth)/2 +"," + newBlockY + ")");
-		
+
 		if(list.length <= 30){
 			let candidateStrokes;// = block.selectAll("circle");
 			candidateStrokes = block.selectAll(".c-stroke")
@@ -642,12 +645,12 @@ module.exports = function(){
 		// new stuff
 		nestedByParty = d3.nest()
 			.key(function(d) { return d.party; })
-			.rollup(function(leaves) { 
+			.rollup(function(leaves) {
 				return leaves.length;
 			})
 			.entries(filteredData)
-			.sort(function(a, b){ 
-				return d3.ascending(b.value, a.value); 
+			.sort(function(a, b){
+				return d3.ascending(b.value, a.value);
 			})*/
 
 		let maxPartyW = 90;
@@ -766,14 +769,14 @@ module.exports = function(){
 		partyBlock = partyCharts[index];
 		pBlockW= partyBlock.node().getBBox().width;
 		currBlockH= block.node().getBBox().height;
-		partyBlock.attr("transform", 
+		partyBlock.attr("transform",
 			"translate("+((bW/2) - (pBlockW/2))+"," + (newBlockY + currBlockH + 110) + ")");
 
 		if(firstLoad){
 			firstLoad = false;
 			//animateParties();
 		}
-		
+
 	}
 
 	let animateRemoved = function(prevBlock, removed){
@@ -807,7 +810,7 @@ module.exports = function(){
 				.on("end", function(d, i){
 					d3.select(this).remove();
 				});
-		
+
 		removed.classed("removed", true);
 
 		clearTimeout(scrollTimeout);
@@ -913,7 +916,7 @@ module.exports = function(){
     			//smoothScroll(infoBlock.offsetTop, 6);
     			scrollToElement(infoBlock,800,100);
 	    	}
-			
+
 		});
 	}
 
@@ -1029,7 +1032,7 @@ module.exports = function(){
 	let disableQuestion = function(type){
 		let questions = document.querySelectorAll("#filtro-perguntas option");
 		let questionsCustom = document.querySelectorAll("#questions .select-items div");
-		
+
 		for(let i=0; i<questionsCustom.length; i++){
 
 			if(questionsCustom[i].getAttribute("data-value") == type){
@@ -1124,7 +1127,7 @@ module.exports = function(){
 	    	d3.selectAll("#chart1 svg").classed("active", false);
 			d3.select("#chart1 svg#chart-"+selectedChart).classed("active", true);
 	    }
-	    
+
 	}
 
 	let getDescription = function(filterType, amount){
@@ -1216,7 +1219,7 @@ module.exports = function(){
 
 		selectedParty = bar.datum().key;
 		//console.log(bar.datum().key);
-		
+
 		//dispatchEvent(bar, "click");
 
 		if(lastTime){
@@ -1241,12 +1244,12 @@ module.exports = function(){
 }
 
 
-let equalToEventTarget = function() { 
+let equalToEventTarget = function() {
     return this == d3.event.target;
 }
 let correctParty = function(party){
 	let corrected = party.toUpperCase();
-	
+
 	// corrects some parties that are wrong in database...
 	corrected = party.toUpperCase().replace("SOLIDARIEDADE", "SD");
 	corrected = corrected.toUpperCase().replace("PC DO B", "PCdoB");
