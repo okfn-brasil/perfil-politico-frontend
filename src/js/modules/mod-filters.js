@@ -1,21 +1,19 @@
 // Populate the select boxes
 // with all available filters
-module.exports = function(filters){
-	let d3 = window.d3;
-	let selects = d3.select("#intro").selectAll("select");
-	let Break = {};
+module.exports = function(filters) {
+  let d3 = window.d3;
+  let selects = d3.select("#intro").selectAll("select");
 
-	window.repopulateFilters = function(){
-		filters.forEach(function(item, i){
-			let select = d3.select("#filtro-"+item.filtro);
-			select.html("");
-			
-			item.lista.forEach(function(obj, ia){
-				let opt;
-				let dep;
+  window.repopulateFilters = function() {
+    filters.forEach(function(item) {
+      let select = d3.select("#filtro-" + item.filtro);
+      select.html("");
 
-				if(obj.dependencia){
-					/*
+      item.lista.forEach(function(obj) {
+        let opt;
+
+        if (obj.dependencia) {
+          /*
 					obj.dependencia.forEach(function(item, id){
 						dep = item.split("-");
 
@@ -37,29 +35,30 @@ module.exports = function(filters){
 						}
 					})
 					*/
-					
-				}else{
-					opt = select.append("option");
-					opt.text(obj.nome)
-					opt.attr("value", obj.valor.toLowerCase());
+        } else {
+          opt = select.append("option");
+          opt.text(obj.nome);
+          opt.attr("value", obj.valor.toLowerCase());
 
-					if(window.currentFilters[item.filtro].toLowerCase() 
-						== obj.valor.toLowerCase() ){
-						opt.attr("selected", true);
-					}else{
-						opt.attr("selected", null);
-					}
-				}
+          if (
+            window.currentFilters[item.filtro].toLowerCase() ==
+            obj.valor.toLowerCase()
+          ) {
+            opt.attr("selected", true);
+          } else {
+            opt.attr("selected", null);
+          }
+        }
 
-				if(item.filtro == "estado"){
-					opt.text(obj.valor.toUpperCase())
-					opt.attr("data-name", obj.nome);
-					opt.attr("data-preposition", obj.preposicao);
-				}
-			});
-		});
+        if (item.filtro == "estado") {
+          opt.text(obj.valor.toUpperCase());
+          opt.attr("data-name", obj.nome);
+          opt.attr("data-preposition", obj.preposicao);
+        }
+      });
+    });
 
-		/*
+    /*
 		filters.forEach(function(filter, i){
 			let optSelected = d3.select("select[data-name="+filter.name+"] option[selected=true]");
 
@@ -78,50 +77,55 @@ module.exports = function(filters){
 				}
 			}
 		});*/
-	}
+  };
 
-	window.repopulateFilters();
-	
-	selects.on("change", function(d){
-		let filterType = d3.select(this).attr("data-name");
-		let selected = d3.select(this).property('value');
+  window.repopulateFilters();
 
-		d3.select(this)
-		.selectAll("option")
-		.attr("selected", function(d){
-			if(d3.select(this).attr("value")==selected){
-				return true;
-			}else{
-				return null;
-			}
-		});
+  selects.on("change", function() {
+    let filterType = d3.select(this).attr("data-name");
+    let selected = d3.select(this).property("value");
 
-		window.currentFilters[filterType] = selected;
+    d3.select(this)
+      .selectAll("option")
+      .attr("selected", function() {
+        if (d3.select(this).attr("value") == selected) {
+          return true;
+        } else {
+          return null;
+        }
+      });
 
-		if(window.currentFilters.cargo == "presidente"){
-			window.currentFilters.estado = "br";
-		}else if(window.currentFilters.cargo == "deputado-estadual" && 
-			window.currentFilters.estado == "df"){
-			window.currentFilters.cargo = "deputado-distrital";
-		}else{
-			window.currentFilters.estado = d3.select("#filtro-estado").property('value')
-		}
+    window.currentFilters[filterType] = selected;
 
-		if(filterType == "estado"){
-			window.currentFilters.estado_nome = d3.select("#filtro-estado option[selected]").attr("data-name");
-			window.currentFilters.estado_prep = d3.select("#filtro-estado option[selected]").attr("data-preposition");
-		}
+    if (window.currentFilters.cargo == "presidente") {
+      window.currentFilters.estado = "br";
+    } else if (
+      window.currentFilters.cargo == "deputado-estadual" &&
+      window.currentFilters.estado == "df"
+    ) {
+      window.currentFilters.cargo = "deputado-distrital";
+    } else {
+      window.currentFilters.estado = d3
+        .select("#filtro-estado")
+        .property("value");
+    }
 
-		if(window.currentFilters.cargo == "presidente"){
-			d3.select("#filtro-estado").attr("disabled", true);
-		}else{
-			d3.select("#filtro-estado").attr("disabled", null);
-		}
+    if (filterType == "estado") {
+      window.currentFilters.estado_nome = d3
+        .select("#filtro-estado option[selected]")
+        .attr("data-name");
+      window.currentFilters.estado_prep = d3
+        .select("#filtro-estado option[selected]")
+        .attr("data-preposition");
+    }
 
+    if (window.currentFilters.cargo == "presidente") {
+      d3.select("#filtro-estado").attr("disabled", true);
+    } else {
+      d3.select("#filtro-estado").attr("disabled", null);
+    }
 
-		clearTimeout(window.partyTimeout);
-		window.init();
-	});
-	
-}
-
+    clearTimeout(window.partyTimeout);
+    window.init();
+  });
+};
