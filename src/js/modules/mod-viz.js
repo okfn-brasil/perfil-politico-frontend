@@ -182,7 +182,7 @@ module.exports = function(){
 
 	let toCurrency = function (value) {
 		const rounded = parseFloat(value).toFixed(2);
-		return "R$ " + parseFloat(rounded).toLocaleString("pt-BR");
+		return "R$ " + rounded.toLocaleString("pt-BR");
 	};
 
 	let loadStaticData = function(i){
