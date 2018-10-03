@@ -5,6 +5,7 @@
 version: 2
 jobs:
   build:
+
     docker:
       # specify the version you desire here
       - image: circleci/node:7.10
@@ -23,8 +24,8 @@ jobs:
           - v1-dependencies-
 
       - run:
-        name: install-dependencies
-        command: npm install
+          name: install-dependencies
+          command: npm install
 
       # special step to save the dependency cache
       - save_cache:
@@ -34,7 +35,7 @@ jobs:
         
       # run eslint!
       - run:
-        name: lint-check
-        command: npm run lint
+          name: lint-check
+          command: npm run lint
 
 
