@@ -21,6 +21,13 @@ module.exports = function() {
   let selectedChart = "age";
   let firstLoad = true;
   let selectedBar = 0;
+  const commonLabels = {
+    elected: {
+      masculino: "eleito",
+      feminino: "eleita"
+    }
+  };
+
   window.parseDate = d3.timeParse("%Y-%m-%d");
   window.partyTimeout;
 
@@ -1051,7 +1058,12 @@ module.exports = function() {
 
     d3.select("#info-raca").text(cData.ethnicity.toLowerCase());
 
-    d3.select("#info-elected").text(function(d, i) {
+    d3.select("#elected-label").text(function() {
+      const label = commonLabels.elected[cData.gender.toLowerCase()];
+      return `Já foi ${label}?`;
+    });
+
+    d3.select("#info-elected").text(function() {
       let num_won = cData.elections_won;
 
       if (num_won > 0) {
