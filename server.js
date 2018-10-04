@@ -9,8 +9,8 @@ app.use(compression());
 app.use(helmet());
 app.use(express.static("build"));
 
-app.get("*", function(req, res) {
-  res.sendFile("./build/index.html", { root: __dirname });
+app.get("*", (req, res) => {
+  res.redirect("/");
 });
 
 app.listen(port, () => {
