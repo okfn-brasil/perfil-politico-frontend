@@ -1059,6 +1059,7 @@ module.exports = function() {
 
   let fillRosiesSuspicions = function(suspicions) {
     if (suspicions.length == 0) {
+      d3.select("#rosies-suspicions").html("");
       return;
     }
 
