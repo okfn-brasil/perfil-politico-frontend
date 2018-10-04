@@ -4,6 +4,7 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const HtmlWebpackExcludeAssetsPlugin = require("html-webpack-exclude-assets-plugin");
 
 module.exports = ({ mode } = { mode: "development" }) => {
   const devMode = mode !== "production";
@@ -19,7 +20,7 @@ module.exports = ({ mode } = { mode: "development" }) => {
       rules: [
         {
           test: /\.js$/,
-          exclude: /(node_modules|bower_components)/,
+          exclude: /(node_modules)/,
           use: {
             loader: "babel-loader",
             options: {
@@ -58,18 +59,21 @@ module.exports = ({ mode } = { mode: "development" }) => {
       new HtmlWebpackPlugin({
         filename: "faq.html",
         template: "./src/html/faq.html",
-        inject: true
+        inject: true,
+        excludeAssets: [/.js/]
       }),
       new HtmlWebpackPlugin({
         filename: "sobre.html",
         template: "./src/html/sobre.html",
-        inject: true
+        inject: true,
+        excludeAssets: [/.js/]
       }),
       new MiniCssExtractPlugin({
         filename: devMode ? "[name].css" : "[name].[hash].css",
         chunkFilename: devMode ? "[id].css" : "[id].[hash].css"
       }),
-      new CopyWebpackPlugin([{ from: "src/images", to: "images" }])
+      new CopyWebpackPlugin([{ from: "src/images", to: "images" }]),
+      new HtmlWebpackExcludeAssetsPlugin()
     ],
     devServer: {
       contentBase: path.join(__dirname, "build"),
