@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "main": "gulpfile.js",
   "scripts": {
+    "start": "npm run build && node server.js",
     "dev": "webpack-dev-server",
     "lint": "eslint .",
     "clean": "rm -rf build",
-    "prewebpack": "npm run clean",
-    "webpack": "webpack",
-    "build": "npm run webpack -- --env.mode production"
+    "prebuild": "npm run clean",
+    "build": "webpack --env.mode production"
   },
   "husky": {
     "hooks": {
