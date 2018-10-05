@@ -120,8 +120,14 @@ module.exports = function(filters) {
     }
 
     if (window.currentFilters.cargo == "presidente") {
+      window.currentFilters.estado_prep = "no";
+      window.currentFilters.estado_nome = "Brasil";
       d3.select("#filtro-estado").attr("disabled", true);
     } else {
+      window.currentFilters.estado_prep = "em";
+      window.currentFilters.estado_nome = d3
+        .select("#filtro-estado option[selected]")
+        .attr("data-name");
       d3.select("#filtro-estado").attr("disabled", null);
     }
 
