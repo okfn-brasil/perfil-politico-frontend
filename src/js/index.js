@@ -3,6 +3,8 @@
 //   navigator.userAgent
 // );
 
+import "../scss/style.scss";
+
 // globals
 window.d3 = require("d3");
 let ptBR_data = require("./data/locale-pt_BR");
