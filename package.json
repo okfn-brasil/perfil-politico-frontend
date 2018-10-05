@@ -1,14 +1,17 @@
 {
   "name": "perfil-politico",
   "version": "1.0.0",
-  "main": "gulpfile.js",
+  "main": "src/js/index.js",
   "scripts": {
-    "start": "npm run build && node server.js",
-    "dev": "webpack-dev-server",
+    "start": "webpack-dev-server",
     "lint": "eslint .",
     "clean": "rm -rf build",
     "prebuild": "npm run clean",
     "build": "webpack --env.mode production"
+  },
+  "engines": {
+    "node": "~10.0.0",
+    "npm": "^5.0.0"
   },
   "husky": {
     "hooks": {
@@ -30,15 +33,12 @@
     "@babel/core": "^7.1.2",
     "@babel/preset-env": "^7.1.0",
     "babel-loader": "^8.0.4",
-    "compression": "^1.7.3",
     "copy-webpack-plugin": "^4.5.2",
     "css-loader": "^1.0.0",
     "eslint": "^5.6.1",
     "eslint-config-prettier": "^3.1.0",
     "eslint-plugin-prettier": "^3.0.0",
-    "express": "^4.16.3",
     "file-loader": "^2.0.0",
-    "helmet": "^3.13.0",
     "html-webpack-exclude-assets-plugin": "0.0.7",
     "html-webpack-plugin": "^3.2.0",
     "husky": "^1.1.0",
