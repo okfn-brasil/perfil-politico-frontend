@@ -39,6 +39,13 @@ module.exports = ({ mode } = { mode: "development" }) => {
         {
           test: /\.(eot|ttf|woff|woff2)$/,
           loader: "file-loader?name=fonts/[name].[ext]"
+        },
+        {
+          test: /\.hbs$/,
+          loader: "handlebars-loader",
+          query: {
+            partialDirs: [path.join(__dirname, "src", "html", "includes")]
+          }
         }
       ]
     },
@@ -53,18 +60,18 @@ module.exports = ({ mode } = { mode: "development" }) => {
     },
     plugins: [
       new HtmlWebpackPlugin({
-        template: "./src/html/index.html",
+        template: "./src/html/index.html.hbs",
         inject: true
       }),
       new HtmlWebpackPlugin({
         filename: "faq.html",
-        template: "./src/html/faq.html",
+        template: "./src/html/faq.html.hbs",
         inject: true,
         excludeAssets: [/.js/]
       }),
       new HtmlWebpackPlugin({
         filename: "sobre.html",
-        template: "./src/html/sobre.html",
+        template: "./src/html/sobre.html.hbs",
         inject: true,
         excludeAssets: [/.js/]
       }),
