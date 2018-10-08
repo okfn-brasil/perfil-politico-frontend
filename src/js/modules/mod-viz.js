@@ -1034,41 +1034,11 @@ module.exports = function() {
     d3.select("#info-profissao").text(() => {
       var return_str = cData.occupation.toLowerCase();
       if (cData.gender.toLowerCase() == "feminino") {
-        var words = return_str.split(" ");
-        var allowed_alteration = true;
-        var lock_iteration = false;
-
-        var sub_final = function(str, end, newStr) {
-          // Inline function to use here inside
-          return str.substr(0, str.length - end.length) + newStr;
-        };
-
-        words.forEach(function(word, index, arr) {
-          // Execute for every word in the string
-          if (allowed_alteration && !lock_iteration) {
-            if (word.endsWith("o")) {
-              if (word.toLowerCase() != "piloto") {
-                // avoid non_flexioning words
-                word = sub_final(word, "o", "a");
-              }
-            } else if (word.endsWith("r")) {
-              word = word + "a";
-            }
-            allowed_alteration = false;
-          } else if (word.toLowerCase() == "de") {
-            // lock all the following words
-            lock_iteration = true;
-          } else if (word.toLowerCase() == "e") {
-            // Add a new feminine flection here
-            lock_iteration = false;
-            allowed_alteration = true;
-          } else if (word.split(",")[0].length != word.length) {
-            // There is a "," in the sentence
-            allowed_alteration = true;
-          }
-          arr[index] = word;
-        });
-        return_str = words.join(" ");
+        var gender_translate = require("../data/jobs.js");
+        var temp = gender_translate[cData.occupation.toUpperCase()];
+        if (temp != null) {
+          return_str = temp.toLowerCase();
+        }
       }
       return return_str;
     });
