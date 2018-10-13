@@ -2,6 +2,7 @@
 // builds the chart using d3
 module.exports = function() {
   const d3 = window.d3;
+  const localeLbl = require("../data/local-label");
   let selectedParty = "";
   let url = "https://api-perfilpolitico.serenata.ai/api/candidate/2018/";
   let candURL = "https://api-perfilpolitico.serenata.ai/api/candidate/";
@@ -21,12 +22,6 @@ module.exports = function() {
   let selectedChart = "age";
   let firstLoad = true;
   let selectedBar = 0;
-  const commonLabels = {
-    elected: {
-      masculino: "eleito",
-      feminino: "eleita"
-    }
-  };
 
   window.parseDate = d3.timeParse("%Y-%m-%d");
   window.partyTimeout;
@@ -1059,8 +1054,13 @@ module.exports = function() {
     d3.select("#info-raca").text(cData.ethnicity.toLowerCase());
 
     d3.select("#elected-label").text(function() {
-      const label = commonLabels.elected[cData.gender.toLowerCase()];
-      return `Já foi ${label}?`;
+      let label = "ELEITO";
+
+      if (cData.gender === "FEMININO") {
+        label = localeLbl(label);
+      }
+
+      return `Já foi ${label.toLowerCase()}?`;
     });
 
     d3.select("#info-elected").text(function() {
