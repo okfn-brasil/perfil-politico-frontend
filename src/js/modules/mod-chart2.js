@@ -1,6 +1,7 @@
 // builds the chart using d3
 module.exports = function() {
   const d3 = window.d3;
+  const gender_translate = require("../data/jobs");
   let breakPoint = 580; // screen width
   let margin, svgWidth, svgHeight, colWidth, colHeight;
   let x, y, assetsLine, svg, xAxis, yAxis;
@@ -346,17 +347,29 @@ module.exports = function() {
 
     d3.selectAll(".history-year").classed("selected, enabled", false);
 
-    elections.forEach(function(obj) {
+    function constructElectionText(obj) {
       let year = obj.year;
-      let text = "";
+      let result = obj.result || "";
+      let [post, comp] = obj.post.split(" ");
 
-      let button = d3.select(".history-year.y" + year);
-      //button.attr("data-elected", obj.elected);
-      //button.attr("data-post", obj.post);
-      //button.attr("data-desc", obj.result);
-      text += "<b>" + year + ":</b> Candidatou-se ao cargo de <b>";
-      text += window.capitalizeName(obj.post);
-      text += "</b> (" + window.capitalizeName(obj.result) + ")";
+      if (chartData.gender === "FEMININO") {
+        post = gender_translate[post];
+        result = result.replace("TO", "TA");
+      }
+
+      post = window.capitalizeName(post + (comp ? ` ${comp}` : ""));
+
+      if (result != "") {
+        result = result.replace(/AO/i, "ÃO");
+        result = `(${window.capitalizeName(result)})`;
+      }
+
+      return `<b>${year}</b> Candidatou-se ao cargo de <b>${post}</b> ${result}`;
+    }
+
+    elections.forEach(function(obj) {
+      const text = constructElectionText(obj);
+      let button = d3.select(".history-year.y" + obj.year);
 
       button.attr("data-text", text);
       button.classed("enabled", true);
@@ -364,11 +377,12 @@ module.exports = function() {
 
     let button = d3.select(".history-year.y2018");
     button.on("click", function() {
-      d3.select("#election-text").html(
-        "<b>2018:</b> Candidatou-se ao cargo de <b>" +
-          window.capitalizeName(window.currentFilters.cargo.replace("-", " ")) +
-          "</b>"
-      );
+      const text = constructElectionText({
+        year: 2018,
+        post: window.currentFilters.cargo.replace("-", " ").toUpperCase()
+      });
+
+      d3.select("#election-text").html(text);
       d3.selectAll(".history-year").classed("selected", false);
 
       button.classed("selected", true);
