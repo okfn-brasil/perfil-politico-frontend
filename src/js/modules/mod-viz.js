@@ -341,7 +341,8 @@ module.exports = function() {
     if (filterType != "") {
       animateRemoved(prevBlock, removed);
       h2Title = selectedOption.innerHTML;
-      text = getDescription(filterType, filteredData.length);
+      text = getDescription(filteredData.length);
+      updateCurrentGender(filterType);
     }
 
     if (filteredData.length == 0) {
@@ -1240,69 +1241,89 @@ module.exports = function() {
     }
   };
 
-  let getDescription = function(filterType, amount) {
-    let phrase = "";
+  let getDescription = function(amount) {
     let prep = { m: "Destes", f: "Destas" };
 
-    if (amount > 1) {
-      if (filterType == "mulheres") {
-        phrase = prep[currGender] + ", <b>" + amount + "</b> são mulheres";
-        currGender = "f";
-      } else if (filterType == "homens") {
-        phrase = prep[currGender] + ", <b>" + amount + "</b> são homens";
-      } else if (filterType == "nunca concorreram") {
-        phrase =
-          prep[currGender] +
-          ", <b>" +
-          amount +
-          "</b> nunca concorreram numa eleição";
-      } else if (filterType == "nunca eleitos") {
-        phrase = prep[currGender] + ", <b>" + amount + "</b> nunca se elegeram";
-      } else if (filterType == "já eleitos") {
-        phrase =
-          prep[currGender] +
-          ", <b>" +
-          amount +
-          "</b> já se elegeram anteriormente";
-      } else if (filterType == "negros ou pardos") {
-        phrase =
-          prep[currGender] +
-          ", <b>" +
-          amount +
-          "</b> são de cor negra, parda ou indígena";
-      } else if (filterType == "brancos") {
-        phrase = prep[currGender] + ", <b>" + amount + "</b> são de cor branca";
-      }
-    } else {
-      if (filterType == "mulheres") {
-        phrase = prep[currGender] + ", <b>" + amount + "</b> é mulher";
-        currGender = "f";
-      }
-      if (filterType == "homens") {
-        phrase = prep[currGender] + ", <b>" + amount + "</b> é homem";
-        currGender = "m";
-      } else if (filterType == "nunca concorreram") {
-        phrase =
-          prep[currGender] +
-          ", <b>" +
-          amount +
-          "</b> nunca concorreu numa eleição";
-      } else if (filterType == "nunca eleitos") {
-        phrase = prep[currGender] + ", <b>" + amount + "</b> nunca se elegeu";
-      } else if (filterType == "já eleitos") {
-        phrase = prep[currGender] + ", <b>" + amount + "</b> já se elegeu";
-      } else if (filterType == "negros ou pardos") {
-        phrase =
-          prep[currGender] +
-          ", <b>" +
-          amount +
-          "</b> é de cor negra, parda ou indígena";
-      } else if (filterType == "brancos") {
-        phrase = prep[currGender] + ", <b>" + amount + "</b> é de cor branca";
-      }
+    let personDescription = getFiltersDescriptionRelatedToPerson(
+      window.contextFilters,
+      amount
+    );
+
+    let politicalCareerDescription = getFilterDescriptionRelatedToPoliticalCareer(
+      window.contextFilters,
+      amount
+    );
+
+    let phrase =
+      prep[currGender] +
+      ", <b>" +
+      amount +
+      "</b> " +
+      personDescription +
+      " " +
+      (personDescription && politicalCareerDescription ? "que " : "") +
+      politicalCareerDescription;
+
+    return phrase;
+  };
+
+  let getFiltersDescriptionRelatedToPerson = function(filters, amount) {
+    if (
+      !["mulheres", "homens", "brancos", "negros ou pardos"].some(value =>
+        filters.includes(value)
+      )
+    )
+      return "";
+
+    let phrase = amount > 1 ? "são" : "é";
+
+    if (filters.includes("mulheres")) {
+      phrase += amount > 1 ? " mulheres" : " mulher";
+    } else if (filters.includes("homens")) {
+      phrase += amount > 1 ? " homens" : " homem";
+    }
+
+    if (filters.includes("negros ou pardos")) {
+      phrase += " de cor negra, parda ou indígena";
+    } else if (filters.includes("brancos")) {
+      phrase += " de cor branca";
     }
 
     return phrase;
+  };
+
+  let getFilterDescriptionRelatedToPoliticalCareer = function(filters, amount) {
+    const filterApplied = filters
+      .reverse()
+      .find(element =>
+        ["nunca concorreram", "nunca eleitos", "já eleitos"].includes(element)
+      );
+
+    if (!filterApplied) return "";
+
+    return {
+      "nunca concorreram": {
+        plural: "nunca concorreram numa eleição",
+        singular: "nunca concorreu numa eleição"
+      },
+      "nunca eleitos": {
+        plural: "nunca se elegeram",
+        singular: "nunca se elegeu"
+      },
+      "já eleitos": {
+        plural: "já se elegeram anteriormente",
+        singular: "já se elegeu"
+      }
+    }[filterApplied][amount > 1 ? "plural" : "singular"];
+  };
+
+  let updateCurrentGender = function(filterType) {
+    const genders = {
+      mulheres: "f",
+      homens: "m"
+    };
+
+    currGender = genders[filterType] || currGender;
   };
 
   let dispatchEvent = function(target, evt) {
