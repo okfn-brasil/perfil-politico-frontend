@@ -2,87 +2,82 @@
 /* Museo font face is free on the weights used in this project */
 /* Museo is a font by Jos Buivenga (exljbris) -> www.exljbris.com */
 @font-face {
-  font-family: "Museo";
-  src: url("../fonts/museo-300-webfont.woff2") format("woff2"),
-    url("../fonts/museo-300-webfont.woff") format("woff");
-  font-weight: 300;
-  font-style: normal;
+    font-family: 'Museo';
+    src: url('../fonts/museo-300-webfont.woff2') format('woff2'),
+        url('../fonts/museo-300-webfont.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
 }
 
 @font-face {
-  font-family: "Museo";
-  src: url("../fonts/museo-700-webfont.woff2") format("woff2"),
-    url("../fonts/museo-700-webfont.woff") format("woff");
-  font-weight: 700;
-  font-style: normal;
+    font-family: 'Museo';
+    src: url('../fonts/museo-700-webfont.woff2') format('woff2'),
+        url('../fonts/museo-700-webfont.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
 }
 
 /* main rules */
-html {
+html{
   width: 100%;
   height: 100%;
-  margin: 0;
-  padding: 0;
+  margin:0; padding: 0;
   background: $white;
   font: 62.5% $font-default;
 }
 
-body {
+body{
   width: 100%;
   height: 100%;
   min-width: 320px;
   min-height: 650px;
-  margin: 0;
-  padding: 0;
+  margin:0; padding:0;
   top: 0;
   font-weight: 300;
   color: $primary-color;
   letter-spacing: 0.06rem;
   font-size: 1.5rem;
   line-height: 1.5;
-  position: relative;
+  position:relative;
 
-  @media (max-width: 430px) {
+  @media (max-width: 430px){
     font-size: 1.4rem;
   }
 }
 
-*,
-p {
+*, p{
   box-sizing: border-box;
   font: 1.5rem $font-default;
   line-height: 2.8rem;
   -webkit-overflow-scrolling: touch;
 
-  @media (max-width: 480px) {
+  @media (max-width: 480px){
     font: 1.4rem $font-default;
     line-height: 2.4rem;
   }
 }
 
-i,
-em {
+i, em {
   font-style: italic;
 }
 
-b,
-strong {
+b, strong{
   font-weight: 700;
 }
 
-a {
+a{
   color: $secondary-color;
   text-decoration: none;
   font-weight: 700;
 
-  &:hover {
+  &:hover{
     text-decoration: underline;
   }
 }
 
 ol.styled li {
-  list-style-type: decimal;
-  list-style-position: inside;
+    list-style-type: decimal;
+    list-style-position: inside;
 }
 
 #main {
@@ -92,19 +87,19 @@ ol.styled li {
   z-index: 1;
   font-size: 1.5rem;
 
-  @media (max-width: 430px) {
+  @media (max-width: 430px){
     font-size: 1.4rem;
   }
 }
 
-svg.viz {
+svg.viz{
   display: block;
   /*width: calc(100% - 30px);*/
   margin: 0;
   left: 50%;
   position: absolute;
   transform: translateX(-50%);
-  z-index: 0;
+  z-index:0;
 }
 
 .d-height {
@@ -119,34 +114,29 @@ svg.viz {
   overflow: hidden;
 }
 
-.box-content,
-.box {
+.box-content, .box{
   width: calc(100% - 1px);
   float: left;
   clear: right;
   overflow: visible;
-  z-index: 100;
+  z-index:100;
   margin: 0;
 
-  &#box1 {
+  &#box1{
     padding: 30px 0;
 
-    @media (max-width: 580px) {
+    @media (max-width: 580px){
       padding: 10px 0;
     }
   }
 }
 
-.box-content {
+.box-content{
   padding-bottom: 30px;
-  position: relative;
+  position:relative;
 }
 
-#about p {
-  text-align: justify;
-}
-
-#top-bar {
+#top-bar{
   border: 1.5px solid $secondary-color;
   background: $white;
   height: 78px;
@@ -154,58 +144,58 @@ svg.viz {
   margin: 0 auto 20px auto;
   font-size: 0;
 
-  .top-icon,
-  .top-menu {
+  .top-icon, .top-menu{
     width: 62px;
     display: inline-block;
     vertical-align: middle;
     text-align: center;
     margin: -7px 0 0 0;
 
-    img {
+    img{
       display: inline-block;
       width: 36px;
     }
 
-    @media (max-width: 580px) {
+
+    @media (max-width: 580px){
       width: 60px;
       margin: -2px 0 0 0;
 
-      img {
+      img{
         width: 30px;
       }
     }
 
-    @media (max-width: 430px) {
+    @media (max-width: 430px){
       width: 43px;
       margin: 0 0 0 0;
 
-      img {
+      img{
         width: 28px;
       }
     }
   }
 
-  .top-icon {
+  .top-icon{
     margin: 0 0 0 10px;
 
-    @media (max-width: 580px) {
+    @media (max-width: 580px){
       margin: 0;
     }
   }
 
-  .top-menu {
+  .top-menu{
     margin: 0 0 0 10px;
 
-    @media (max-width: 580px) {
+    @media (max-width: 580px){
       margin: 0;
     }
   }
 
-  .top-text {
+  .top-text{
     width: calc(540px - 160px);
     display: inline-block;
-    font: 4rem $font-default;
+    font: 4.0rem $font-default;
     font-weight: 700;
     line-height: 7.4rem;
     text-align: center;
@@ -213,61 +203,61 @@ svg.viz {
     vertical-align: middle;
     color: $secondary-color;
 
-    @media (max-width: 580px) {
+    @media (max-width: 580px){
       font-size: 3.2rem;
       line-height: 6rem;
       width: calc(100% - 130px);
     }
 
-    @media (max-width: 430px) {
+    @media (max-width: 430px){
       font-size: 2.4rem;
       line-height: 5rem;
       width: calc(100% - 90px);
     }
 
-    span {
+    span{
       color: $alt-color;
     }
   }
 
-  @media (max-width: 580px) {
+  @media (max-width: 580px){
     width: calc(100% - 30px);
     margin: 2.8rem 0px 3.2rem 0px;
     height: 68px;
   }
-  @media (max-width: 430px) {
+  @media (max-width: 430px){
     width: calc(100% - 0px);
     margin: 1.4rem 0px 1.4rem 0px;
     height: 54px;
   }
 }
 
-p {
+p{
   margin-bottom: 2.4rem;
 }
 
-.centered {
+.centered{
   text-align: center;
 }
 
-.all-centered {
+.all-centered{
   text-align: center;
   display: block;
   width: 100%;
   position: absolute;
-  top: 60%;
+  top:60%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
 
-#intro {
+#intro{
   font-size: 1.5rem;
   padding: 0;
   margin-bottom: 0;
 
-  span {
+  span{
     display: inline-block;
-    width: calc((100% / 2) - 20px);
+    width: calc( (100% / 2) - 20px);
     height: 50px;
     line-height: 6.5rem;
     max-width: 280px;
@@ -275,7 +265,7 @@ p {
     text-align: left;
     padding: 0 12px;
 
-    .select-box {
+    .select-box{
       display: inline-block;
       width: calc(100% - 90px);
       padding-right: 25px;
@@ -284,20 +274,20 @@ p {
       margin: 1.4rem 0;
     }
 
-    &.last {
+    &.last{
       margin-left: 30px;
     }
   }
 
-  @media (max-width: 960px) {
-    span {
+  @media (max-width: 960px){
+    span{
       padding: 0;
     }
   }
 
-  @media (max-width: 580px) {
+  @media (max-width: 580px){
     font-size: 1.35rem;
-    span {
+    span{
       display: inline-block;
       width: 100%;
       height: 40px;
@@ -305,15 +295,14 @@ p {
       line-height: 6.5rem;
       padding: 0;
 
-      &.last {
-        margin: 0;
+      &.last{
+        margin:0;
       }
     }
 
-    .select-box {
+    .select-box{
       font-size: 1.35rem;
-      select,
-      input {
+      select, input{
         font-size: 1.35rem;
         line-height: 24px;
       }
@@ -321,63 +310,64 @@ p {
   }
 }
 
-.column {
+.column{
   max-width: 960px;
-  margin: 0 auto 1.4rem auto;
+  margin: 0 auto 1.4rem auto; 
   padding: 0 16px;
   position: relative;
   line-height: 1.5;
 
-  &.description {
+  &.description{
     text-align: center;
     padding: 2.8rem 0 0 0;
   }
 
-  &.small {
+  &.small{
     max-width: 580px;
   }
 
-  @media (max-width: 580px) {
-    margin: 0 auto 1.2rem auto;
+  
+  @media (max-width: 580px){
+    margin: 0 auto 1.2rem auto; 
     padding: 0 20px;
 
-    &.description {
+    &.description{
       padding: 2.8rem 0 0 0;
     }
   }
 
-  .last {
+  .last{
     margin-right: 0;
   }
 
-  #profile-pic {
+  #profile-pic{
     height: 200px;
-    width: calc(((100% - (#{$inter-column}* 5)) / 6) * 1);
+    width: calc( ( (100% - (#{$inter-column}*5)) / 6 ) * 1 );
     position: relative;
-    background: rgba(104, 67, 163, 0.05); /*rgba(104,67,103,0.12);*/
+    background: rgba(104,67,163,0.05);/*rgba(104,67,103,0.12);*/
 
-    .img-mask:before {
+    .img-mask:before{
       content: "";
       display: block;
       width: 100%;
       height: 100%;
       position: absolute;
-      background: rgba(104, 67, 163, 0.05); /*rgba(104,67,103,0.12);*/
-      z-index: 1;
+      background: rgba(104,67,163,0.05);/*rgba(104,67,103,0.12);*/
+      z-index:1;
     }
 
-    img {
+    img{
       width: 100%;
-      filter: url("data:image/svg+xml;utf8,&lt;svg xmlns='http://www.w3.org/2000/svg'&gt;&lt;filter id='grayscale'&gt;&lt;feColorMatrix type='matrix' values='0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0'/&gt;&lt;/filter&gt;&lt;/svg&gt;#grayscale");
+      filter: url("data:image/svg+xml;utf8,&lt;svg xmlns=\'http://www.w3.org/2000/svg\'&gt;&lt;filter id=\'grayscale\'&gt;&lt;feColorMatrix type=\'matrix\' values=\'0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0\'/&gt;&lt;/filter&gt;&lt;/svg&gt;#grayscale"); 
       filter: gray;
       filter: grayscale(100%) contrast(110%) brightness(120%);
     }
 
-    @media (max-width: 960px) {
-      width: 160px;
+    @media (max-width: 960px){
+      width: 160px; 
     }
 
-    @media (max-width: 430px) {
+    @media (max-width: 430px){
       width: 200px;
       height: 255px;
       text-align: center;
@@ -385,43 +375,40 @@ p {
       float: none;
       border: 2px solid $bg-light;
 
-      .img-mask {
+      .img-mask{
         display: inline-block;
         width: calc(100% - 60px);
         padding: 30px 0;
-        z-index: 10;
+        z-index:10;
 
-        &:before {
+        &:before{
           width: calc(100% - 60px);
           height: calc(100% - 63px);
         }
       }
 
-      a {
+      a{
         background: transparent;
         color: $secondary-color;
         position: absolute;
         display: none;
       }
 
-      img {
+      img{
         width: 100%;
-        z-index: 100;
+        z-index:100;
         border: 2px solid $white;
       }
     }
   }
 
-  #profile-name {
+  #profile-name{
     font: 2.5rem $font-default;
     color: $secondary-color;
-    width: calc(
-      (((100% - (#{$inter-column}) * 5) / 6) * 5) + (#{$inter-column}* 4)
-    );
+    width: calc( (( (100% - (#{$inter-column})*5) / 6 ) * 5 ) + (#{$inter-column}*4) );
     text-align: left;
 
-    button.next,
-    button.last {
+    button.next, button.last{
       display: block;
       float: right;
       font-size: 1.5rem;
@@ -435,112 +422,112 @@ p {
       letter-spacing: 0.02rem;
       cursor: pointer;
 
-      &:focus {
+      &:focus{
         box-shadow: none;
         outline: none !important;
         border-radius: 0;
       }
 
-      &:hover {
+      &:hover{
         color: $primary-color;
       }
 
-      img {
+      img{
         width: 30px;
         display: inline-block;
         vertical-align: middle;
       }
     }
 
-    button.next {
+    button.next{
       padding: 1rem -2rem 1rem 0;
       margin-left: 2rem;
     }
 
-    @media (max-width: 960px) {
+    @media (max-width: 960px){
       font: 1.7rem $font-default;
-      width: calc(100% - 160px - #{$inter-column});
+      width: calc( 100% - 160px - #{$inter-column}); 
       margin: 2.8rem 0 0 0;
-      span {
+      span{
         width: 100%;
         clear: both;
         display: block;
       }
     }
-    @media (max-width: 768px) {
-      button {
+    @media (max-width: 768px){
+      
+      button{
         font-size: 1.3rem;
       }
-      button.last {
+      button.last{
         float: left;
         margin-left: -1rem;
       }
-      button.next {
+      button.next{
         margin-left: 1rem;
         margin-right: -1rem;
       }
     }
 
-    @media (max-width: 430px) {
+    @media (max-width: 430px){
       text-align: center;
       width: 100%;
-      max-width: 200px;
+      max-width:200px;
       margin: 1.8rem auto;
       float: none;
     }
+
+    
   }
 
-  #basic-info {
-    width: calc(
-      (((100% - (#{$inter-column}) * 5) / 6) * 2) + (#{$inter-column}* 1)
-    );
+  #basic-info{
+    width: calc( (( (100% - (#{$inter-column})*5) / 6 ) * 2 ) + (#{$inter-column}*1) );
     margin: 1.4rem $inter-column 0 0;
     overflow: hidden;
     font-size: 1.4rem;
 
-    p {
+    p{
       margin: 0;
     }
 
-    div {
+    div{
       padding: 0.25rem 0;
 
-      &.clickable {
+      &.clickable{
         cursor: pointer;
         color: $secondary-color;
 
-        &:hover,
-        &.active {
+        &:hover, &.active{
           background: $bg-light;
           color: $secondary-color;
         }
       }
     }
 
-    @media (max-width: 960px) {
-      width: calc(100% - 160px - #{$inter-column});
+    @media (max-width: 960px){
+      width: calc( 100% - 160px - #{$inter-column}); 
       margin: 2.8rem 0 0 0;
     }
-    @media (max-width: 430px) {
+    @media (max-width: 430px){
       width: 100%;
-      max-width: 420px;
+      max-width:420px;
       margin: 2.8rem auto 0 auto;
       float: none;
       clear: both;
     }
   }
 
-  @media (max-width: 960px) {
+  @media (max-width: 960px){
     max-width: 560px;
   }
 }
 
-.text-col {
+.text-col{
   float: left;
   overflow: hidden;
   margin: 2.8rem $inter-column 0 0;
 
-  @media (max-width: 430px) {
+  @media (max-width: 430px){
     max-width: 410px;
     margin: 2.8rem auto;
     float: none;
@@ -548,57 +535,56 @@ p {
   }
 }
 
-#chart1 {
+#chart1{
   height: 280px;
-  width: calc((100% - #{$inter-column}) / 2);
+  width: calc( ( 100% - #{$inter-column}) / 2 );
   margin: 2.8rem 0 0 0;
   padding: 0;
   display: block;
   overflow: hidden;
   right: 0;
 
-  .chart1-container {
+  .chart1-container{
     width: 100%;
     max-width: 100%;
     height: 240px;
     display: block;
     position: relative;
   }
-  svg {
+  svg{
     width: 100%;
     max-width: 100%;
     display: none;
     float: none;
     position: relative;
-    right: 0;
-    top: 0;
+    right: 0; top: 0;
 
-    .bar {
+    .bar{
       fill: $chart-color;
 
-      &.highlight {
+      &.highlight{
         fill: $secondary-color;
       }
     }
 
-    .bar-line {
+    .bar-line{
       stroke: $chart-color;
       stroke-width: 1px;
     }
 
-    .bar-number,
-    .bar-label {
+    .bar-number, .bar-label {
       fill: $primary-color;
       color: $primary-color;
       font: 1.2rem $font-default;
     }
 
-    &.active {
+    &.active{
       display: block;
     }
+
   }
 
-  @media (max-width: 960px) {
+  @media (max-width:960px){
     width: 100%;
     float: none;
     clear: both;
@@ -608,37 +594,37 @@ p {
   }
 }
 
-.clear {
+.clear{
   display: block;
   width: 100%;
-  clear: both;
+  clear:both;
 }
 
-#chart1-title {
+#chart1-title{
   margin: 1.4rem 0 2.8rem 0;
   font-weight: 700;
   padding-left: 2px;
 
-  @media (max-width: 960px) {
+  @media (max-width: 960px){
     width: 100%;
     float: none;
     clear: both;
-    padding-top: 3rem;
+    padding-top:3rem;
     margin: 0rem 0 1.4rem 0;
   }
 }
 
-#chart2 {
-  width: 100%;
+#chart2{
+  width: 100%; 
   height: auto;
-  margin: 2rem 0 0 0;
+  margin: 2rem 0 0 0; 
   /* border: 1px solid $bg-light; */
-  padding: 0;
+  padding: 0; 
   display: block;
   clear: both;
   overflow: hidden;
 
-  svg {
+  svg{
     width: 100%;
     max-width: 100%;
     display: block;
@@ -647,34 +633,34 @@ p {
     position: relative;
     margin-top: 0rem;
 
-    .affil-text {
+    .affil-text{
       font-size: 1rem;
     }
 
-    .affil-bg {
+    .affil-bg{
       fill: $white;
     }
   }
-  @media (max-width: 580px) {
+  @media (max-width: 580px){
     width: 100%;
     float: none;
     clear: both;
     display: block;
-    margin: 1.4rem 0 0 0;
+    margin: 1.4rem 0 0 0; 
   }
 
-  &.hidden {
+  &.hidden{
     display: none;
   }
 }
 
-#chart2-title {
-  &.hidden {
+#chart2-title{
+  &.hidden{
     display: none;
   }
 }
 
-h4 {
+h4{
   width: 100%;
   clear: both;
   float: none;
@@ -684,11 +670,11 @@ h4 {
   line-height: 1.5;
   margin-bottom: 2.4rem;
 
-  &.hidden {
+  &.hidden{
     display: none;
   }
 
-  @media (max-width: 580px) {
+  @media (max-width: 580px){
     width: 100%;
     float: none;
     clear: both;
@@ -697,7 +683,7 @@ h4 {
   }
 }
 
-h2 {
+h2{
   width: 100%;
   font-weight: 300;
   padding: 0;
@@ -705,25 +691,26 @@ h2 {
   background-color: $bg-light;
   text-align: center;
 
-  .column {
-    color: $secondary-color;
+  .column{
+    color: $secondary-color; 
     padding: 2.8rem 10px;
     margin: 0 auto;
     line-height: 4.2rem;
     font: 2.5rem $font-default;
 
-    @media (max-width: 580px) {
+    @media (max-width: 580px){
       padding: 2rem 10px;
       line-height: 3.6rem;
       font: 2.1rem $font-default;
     }
   }
 
-  @media (max-width: 580px) {
+  @media (max-width: 580px){
+    
   }
 }
 
-h3 {
+h3{
   font: 2.5rem $font-default;
   font-weight: 700;
   color: $alt-color;
@@ -731,17 +718,17 @@ h3 {
   padding: 6.4rem 0 4.2rem 0;
 }
 
-#election-history {
+#election-history{
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: wrap; 
   flex-direction: row;
 
-  @media (max-width: 580px) {
-    display: block;
-    font-size: 0;
+  @media (max-width: 580px){
+      display: block;
+      font-size: 0;
   }
 
-  button {
+  button{
     flex: 1;
     background: $chart-color;
     border: 1px solid $white;
@@ -752,43 +739,44 @@ h3 {
     font-size: 1.5rem;
     padding: 0.4rem 0.2rem;
 
-    &:focus {
+    &:focus{
       box-shadow: none;
       outline: none !important;
       border-radius: 0;
     }
 
-    &.enabled {
+    &.enabled{
       background: $secondary-color;
       opacity: 0.55;
       cursor: pointer;
 
-      &.selected {
+      &.selected{
         opacity: 1;
       }
 
-      &:hover {
+      &:hover{
         opacity: 0.75;
       }
+
     }
 
-    @media (max-width: 960px) {
-      width: 20%;
+    @media (max-width: 960px){
+      width:20%;
       font-size: 1.3rem;
     }
 
-    @media (max-width: 580px) {
-      width: 20%;
+    @media (max-width: 580px){
+      width:20%;
       flex: 0;
     }
   }
 }
 
-#election-text {
+#election-text{
   margin: 2rem 0 4rem 0;
 }
 
-#bottom-bar {
+#bottom-bar{
   font: 3.2rem $font-default;
   line-height: 6.8rem;
   background-color: $secondary-color;
@@ -799,9 +787,9 @@ h3 {
   position: fixed;
   overflow: visible;
   bottom: 0;
-  z-index: 1000;
+  z-index:1000;
 
-  .column {
+  .column{
     color: $white;
     padding: 2.1rem 14px 1rem 14px;
     margin: 0 auto;
@@ -809,18 +797,19 @@ h3 {
     line-height: 8rem;
     height: 8rem;
 
-    @media (max-width: 980px) {
+
+    @media (max-width: 980px){
       width: 100%;
       max-width: 100%;
     }
 
-    @media (max-width: 580px) {
+    @media (max-width: 580px){
       padding: 1.4rem 14px;
       line-height: 3.6rem;
       font: 2.1rem $font-default;
     }
 
-    &.description {
+    &.description{
       font: 1.5rem $font-default;
       line-height: 2rem;
       height: 4rem;
@@ -828,43 +817,43 @@ h3 {
       margin-bottom: 5px;
       padding: 1.2rem 14px 1.2rem 14px;
 
-      @media (max-width: 580px) {
+      @media (max-width: 580px){
         font: 1.35rem $font-default;
         line-height: 2rem;
       }
     }
 
-    &.hidden {
+    &.hidden{
       display: none;
     }
   }
 
-  #candidate-list {
+  #candidate-list{
     top: auto;
     bottom: 100%;
   }
 }
-#tags {
+#tags{
   background: $white;
   overflow: hidden;
 
-  button {
+  button{
     background: $white;
     border: 1px solid $secondary-color;
     color: $secondary-color;
     cursor: pointer;
 
-    &:hover {
+    &:hover{
       background: $bg-light;
     }
 
-    &:focus {
+    &:focus{
       box-shadow: none;
       outline: none !important;
       border-radius: 0;
     }
 
-    &:disabled {
+    &:disabled{
       border: 1px solid $input-color;
       color: $input-color;
       opacity: 0.7;
@@ -872,22 +861,22 @@ h3 {
     }
   }
 
-  .description {
+  .description{
     text-align: left;
   }
 
-  @media (max-width: 580px) {
+  @media (max-width: 580px){
     font: 1.35rem $font-default;
     line-height: 2rem;
     max-height: 95px;
   }
 }
 
-.viz {
+.viz{
   overflow: visible;
   top: 0;
   display: block;
-  pattern {
+  pattern{
     /*image{
       filter: url("data:image/svg+xml;utf8,&lt;svg xmlns=\'http://www.w3.org/2000/svg\'&gt;&lt;filter id=\'grayscale\'&gt;&lt;feColorMatrix type=\'matrix\' values=\'0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0\'/&gt;&lt;/filter&gt;&lt;/svg&gt;#grayscale"); 
       filter: gray;
@@ -895,10 +884,10 @@ h3 {
     }*/
   }
 
-  .c {
+  .c{
     cursor: pointer;
 
-    &:hover {
+    &:hover{
       /*opacity: 0.65;*/
       stroke: #000;
     }
@@ -908,18 +897,18 @@ h3 {
     stroke: $alt-color;
     stroke-width: 2px;
 
-    &.selected {
+    &.selected{
       fill: $secondary-color;
       stroke: $secondary-color;
-
-      &.removed {
+      
+      &.removed{
         fill: $secondary-color;
         stroke: $secondary-color;
         opacity: 0.45;
       }
     }
 
-    &.removed {
+    &.removed{
       fill: $alt-color;
       stroke: $alt-color;
       opacity: 0.45;
@@ -931,80 +920,81 @@ h3 {
     stroke-width: 4px;
     opacity: 1;
 
-    &.selected {
+    &.selected{
       stroke: $secondary-color;
-
-      &.removed {
+      
+      &.removed{
         stroke: $secondary-color;
         opacity: 0.45;
       }
     }
 
-    &.removed {
+    &.removed{
       stroke: $secondary-color;
       opacity: 0.45;
     }
   }
 
-  circle.c-stroke {
+  circle.c-stroke{
     stroke: $alt-color;
     stroke-width: 4px;
     fill: none;
 
-    &.selected {
+    &.selected{
       stroke: $secondary-color;
-      &.removed {
+      &.removed{
         stroke: $secondary-color;
       }
     }
 
-    &.removed {
+    &.removed{
       stroke: $alt-color;
     }
   }
 
-  .party-bar {
+  .party-bar{
     fill: $alt-color;
     cursor: pointer;
 
-    &.highlighted {
+    &.highlighted{
       fill: $secondary-color;
     }
-    &:hover {
+    &:hover{
       opacity: 0.7;
     }
   }
 
-  .party-label {
-    font-size: 1.3 rem;
+  .party-label{
+    font-size: 1.3  rem;
     pointer-events: bounding-box;
     cursor: pointer;
     font: 0.8rem Helvetica, Arial;
 
-    @media (max-width: 580px) {
+    @media (max-width: 580px){
       font-size: 1rem;
     }
 
-    @media (max-width: 430px) {
-      font-size: 0.8rem;
+    @media (max-width: 430px){
+      font-size: .8rem;
     }
   }
+
 }
 
-.chart2-svg {
-  text {
+.chart2-svg{
+  text{
     font-size: 1.3rem;
     font-family: Helvetica, Arial, sans-serif;
   }
-  .asset-line {
+  .asset-line{
     stroke: $secondary-color;
     stroke-width: 3;
     fill: none;
   }
-  .asset-point {
+  .asset-point{
     fill: $secondary-color;
   }
-  .elect-sq {
+  .elect-sq{
     fill: $alt-color;
     stroke: $bg-light;
   }
@@ -1012,25 +1002,25 @@ h3 {
   .tick {
     opacity: 1;
 
-    line {
+    line{
       stroke: $line-light;
     }
 
-    text {
+    text{
       color: $primary-color;
       fill: $primary-color;
       font-size: 1.1rem;
     }
 
-    &.opaque {
+    &.opaque{
       opacity: 0.5;
-      text {
+      text{
         visibility: hidden;
       }
     }
 
-    @media (max-width: 580px) {
-      text {
+    @media (max-width: 580px){
+      text{
         font-size: 0.9rem;
       }
     }
@@ -1046,13 +1036,15 @@ h3 {
     stroke-width: 0;
   }
 
-  .elect-point {
+  .elect-point{
     fill: $alt-color;
     stroke: $bg-light;
   }
+
+
 }
 
-#info-box {
+#info-box{
   border: 2px solid $alt-color;
   background: $white;
   width: 50%;
@@ -1060,40 +1052,40 @@ h3 {
   padding: 10px;
   position: absolute;
   top: 0;
-  z-index: 10001;
+  z-index:10001;
   text-align: center;
   font-size: 1.5rem;
   line-height: 1.8rem;
   display: inline-block;
-  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
+  box-shadow: 2px 2px 2px rgba(0,0,0,0.3);
   visibility: visible;
   opacity: 1;
 
   transition: opacity 0.5s;
 
-  &.hidden {
+  &.hidden{
     opacity: 0;
     visibility: hidden;
   }
 
-  &.smaller {
+  &.smaller{
     max-width: 190px;
   }
 }
 
-#msg-box {
+#msg-box{
   border: 2px solid $alt-color;
   background: $white;
   width: 90%;
   max-width: 580px;
   padding: 10px;
   position: fixed;
-  z-index: 101;
+  z-index:101;
   text-align: center;
   font-size: 1.5rem;
   line-height: 1.8rem;
   display: block;
-  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
+  box-shadow: 2px 2px 2px rgba(0,0,0,0.3);
   visibility: visible;
   opacity: 1;
 
@@ -1103,26 +1095,26 @@ h3 {
 
   transition: opacity 0.5s;
 
-  &.hidden {
+  &.hidden{
     opacity: 0;
     visibility: hidden;
   }
 }
 
-#full-info {
+#full-info{
   display: block;
   text-align: center;
 
-  #full-info-content {
+  #full-info-content{
     display: block;
     text-align: left;
 
-    &.hidden {
+    &.hidden{
       display: none;
     }
   }
 
-  .restart-bt {
+  .restart-bt{
     border: 1px solid $secondary-color;
     color: $secondary-color;
     font-weight: 700;
@@ -1133,21 +1125,20 @@ h3 {
     display: inline-block;
     margin: 0rem auto 5rem auto;
 
-    &:hover {
+    &:hover{
       background: $bg-light;
     }
 
-    &.hidden {
+    &.hidden{
       display: none;
     }
   }
 }
 
-#footer {
+#footer{
   position: relative;
   display: block;
-  bottom: 0;
-  left: 0;
+  bottom: 0; left: 0;
   width: 100%;
   padding: 2rem 0 12rem 0;
   margin-bottom: 0;
@@ -1156,52 +1147,52 @@ h3 {
   clear: both;
   text-align: right;
 
-  .brand {
+  .brand{
     display: inline-block;
     width: 150px;
     overflow: hidden;
     vertical-align: middle;
 
-    img {
+    img{
       width: 100%;
       display: inline-block;
     }
 
-    @media (max-width: 960px) {
+    @media (max-width: 960px){
       width: 110px;
     }
 
-    @media (max-width: 580px) {
+    @media (max-width: 580px){
       display: inline-block;
       width: 110px;
       text-align: right;
 
-      img {
+      img{
         display: inline-block;
         text-align: right;
       }
     }
 
-    @media (max-width: 360px) {
+    @media (max-width: 360px){
       display: inline-block;
       width: 95px;
       text-align: right;
 
-      img {
+      img{
         display: inline-block;
         text-align: right;
       }
     }
   }
 
-  .flex-container {
+  .flex-container { 
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: wrap; 
     flex-direction: row;
     justify-content: space-between;
   }
 
-  .flex-item {
+  .flex-item{
     font-size: 1.35rem;
     align-self: center;
     margin-left: auto;
@@ -1209,56 +1200,60 @@ h3 {
     height: 100px;
     align-self: flex-end;
 
-    &:first-child {
+    &:first-child{
       margin-left: 0;
       align-self: flex-start;
-      a {
+      a{
         display: block;
         margin-bottom: 0.5rem;
       }
     }
-    &:last-child {
-      margin-left: 1rem;
-      span {
+    &:last-child{
+      margin-left:1rem;
+      span{
         margin-left: 18px;
         display: block;
       }
     }
-    &:nth-child(2) {
-      span {
+    &:nth-child(2){
+      span{
         margin-left: 10px;
         display: block;
       }
     }
-    span {
-      margin-left: 18px;
-      display: block;
+    span{
+        margin-left: 18px;
+        display: block;
     }
 
-    @media (max-width: 580px) {
+    @media (max-width: 580px){
+
       align-self: flex-start;
       margin: 2rem auto 0 -10px;
 
       /*width: 130px;*/
-      &:first-child {
+      &:first-child{
         margin: 2rem 0 1rem 0;
         width: 100%;
         height: 3rem;
       }
-      &:nth-child(2) {
+      &:nth-child(2){
         margin: 3rem 0 0 -10px;
       }
-      &:last-child {
+      &:last-child{
         margin: 3rem auto 0 0;
       }
 
-      a {
+      a{
         margin-bottom: 0.5rem;
       }
+
     }
   }
 
-  &.abs {
+  
+
+  &.abs{
     /*position: absolute;*/
     bottom: 0;
     padding: 2rem 0 2rem 0;
@@ -1266,10 +1261,10 @@ h3 {
     margin-top: 4rem;
   }
 
-  @media (max-width: 580px) {
+  @media (max-width: 580px){
     padding-bottom: 14rem;
 
-    a {
+    a{
       display: block;
       margin-bottom: 2rem;
     }
@@ -1282,11 +1277,11 @@ h3 {
   margin-bottom: 1rem;
 
   a {
-    border: 0.25rem solid $secondary-color;
-    border-radius: 0.25rem;
+    border: .25rem solid $secondary-color;
+    border-radius: .25rem;
     color: $secondary-color;
     display: block;
-    padding: 0.75rem 2rem;
+    padding: .75rem 2rem;
     text-decoration: none;
     text-transform: uppercase;
 
@@ -1303,7 +1298,6 @@ h3 {
     margin: 0 0 0 1rem;
   }
 
-  p {
-    margin: 0;
-  }
+  p { margin: 0 }
+
 }
