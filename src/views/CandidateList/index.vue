@@ -130,6 +130,7 @@ import CardCandidate from "./CardCandidate.vue";
 import Analysis from "./Analysis/index.vue";
 import useStore from "../../hooks/useStore";
 import { computed, defineComponent, reactive } from "vue";
+import arrayShuffle from "array-shuffle";
 import * as roles from "../../services/mocks/filtersRoles.json";
 import * as locales from "../../services/mocks/filtersLocales.json";
 import services from "@/services";
@@ -204,11 +205,11 @@ export default defineComponent({
         valuesData.push(i)
       );
 
-      return valuesData.filter(function (el) {
+      return arrayShuffle(valuesData.filter(function (el) {
         if (el.party == data.Party.currentParty) {
           return el;
         }
-      });
+      }));
     });
 
     let currentFilterElectionsWon = computed(function () {
@@ -231,7 +232,7 @@ export default defineComponent({
       data.Candidates.currentCandidates.objects?.forEach((i) =>
         valuesData.push(i)
       );
-      return valuesData;
+      return arrayShuffle(valuesData);
     });
 
     return {
