@@ -152,7 +152,7 @@
             </p>
             <router-link
               type="button"
-              class="text-primary-base uppercase font-bold bg-secondary-base hover:bg-secondary-light font-medium rounded-full text-sm px-12 py-4 text-center mr-2 mb-2"
+              class="text-primary-base uppercase font-bold bg-secondary-base hover:brightness-75 font-medium rounded-full text-sm px-12 py-4 text-center mr-2 mb-2 transition-colors"
               :to="{ name: 'About' }"
             >
               Saiba mais
