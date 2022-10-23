@@ -53,7 +53,7 @@
           </p>
         </div>
         <div class="col-span-2">
-          <FiltersAnalysis />
+          <AnalysisChart />
         </div>
       </div>
     </div>
@@ -62,10 +62,10 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import FiltersAnalysis from "./FiltersAnalysis.vue";
+import AnalysisChart from "./AnalysisChart.vue";
 
 export default defineComponent({
-  components: { FiltersAnalysis },
+  components: { AnalysisChart },
   data() {
     return {
       isOpenAnalisys: true,
